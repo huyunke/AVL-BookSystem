@@ -12,9 +12,7 @@ User::User(string id,string name, string password,string type) {
     this->type = type;
 }
 
-User::~User() {
-    delete this;
-}
+User::~User() {}
 
 string User::getId() {
     return id;

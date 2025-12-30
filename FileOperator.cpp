@@ -1,9 +1,11 @@
 #include "include/FileOperator.h"
 #include "include/Book.h"
+#include "include/User.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 
 using namespace std;
 
@@ -92,26 +94,53 @@ bool FileOperator::readUserFile(string userFilename,unordered_map<string,User*>&
     return true;
 }
 
+//需要检查
 void FileOperator::writeUserFile(string userFilename,User* user) {
-    ofstream writeUserFile(userFilename);
+    // 先读取所有用户信息
     ifstream readUserFile(userFilename);
-    if (!writeUserFile||!readUserFile) {
-        cout << "无法打开用户文件" << endl;
+    if (!readUserFile) {
+        cout << "无法打开用户文件进行读取" << endl;
         return;
     }
-    //遍历用户信息，查找到当前用户信息所在位置
+
+    vector<string> allLines;
     string line;
+    bool userFound = false;
+
     while (getline(readUserFile, line)) {
         istringstream iss(line);
         string id;
         iss>>id;
         if (id==user->getId()) {
-            writeUserFile<<user->getId()<<" "<<user->getName()<<" "<<user->getPassword()<<" "<<user->getType();
-            string borrowBookIds=user->getBorrowBookId();
-            writeUserFile<<borrowBookIds;
-            writeUserFile<<endl;
+            // 更新当前用户的信息
+            string updatedLine = user->getId() + " " + user->getName() + " " +
+                                user->getPassword() + " " + user->getType() +
+                                user->getBorrowBookId();
+            allLines.push_back(updatedLine);
+            userFound = true;
         } else {
-            writeUserFile<<line<<endl;
+            allLines.push_back(line);
         }
     }
+    readUserFile.close();
+
+    // 如果用户不存在，添加新用户
+    if (!userFound) {
+        string newLine = user->getId() + " " + user->getName() + " " +
+                        user->getPassword() + " " + user->getType() +
+                        user->getBorrowBookId();
+        allLines.push_back(newLine);
+    }
+
+    // 写回文件
+    ofstream writeUserFile(userFilename);
+    if (!writeUserFile) {
+        cout << "无法打开用户文件进行写入" << endl;
+        return;
+    }
+
+    for (const auto& l : allLines) {
+        writeUserFile << l << endl;
+    }
+    writeUserFile.close();
 }

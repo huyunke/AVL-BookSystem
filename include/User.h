@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include "BookBorrowInfo.h"
-#include "Book.h"
 #include "AVLTree.h"
 
 using namespace std;

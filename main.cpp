@@ -26,18 +26,21 @@ int main() {
     cout<<"请输入您的id：";
     string id;
     cin>>id;
-    string password;
     while(userMap.find(id)==userMap.end()) {
         cout<<"用户不存在"<<endl;
         cout<<"请检查id是否正确并重新输入："<<endl;
         cin>>id;
     }
-    while (userMap[id]->getPassword()!=password) {//密码加密不知道做不做
+    cout<<"请输入密码：";
+    string password;
+    cin>>password;
+    while (userMap[id]->getPassword()!=password) {
         cout<<"密码错误"<<endl;
-        cout<<"请重新输入："<<endl;
+        cout<<"请重新输入密码："<<endl;
         cin>>password;
     }
-    cout<<"登录成功"<<endl;
+    cout<<"登录成功！"<<endl;
+    cout<<"=================================="<<endl;
     User *user=userMap[id];
 
     //根据用户类型进入不同的界面

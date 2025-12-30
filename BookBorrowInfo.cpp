@@ -11,9 +11,7 @@ BookBorrowInfo::BookBorrowInfo(string bookId)  {
     this->returnTime = returnTime;
 }
 
-BookBorrowInfo::~BookBorrowInfo() {
-    delete this;
-}
+BookBorrowInfo::~BookBorrowInfo() {}
 
 string BookBorrowInfo::getBookId() {
     return bookId;

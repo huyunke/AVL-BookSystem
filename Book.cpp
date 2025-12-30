@@ -10,9 +10,7 @@ Book::Book(string id, string name, string author, string borrowerId, bool status
     this->status = status;
 }
 
-Book::~Book() {
-    delete this;
-}
+Book::~Book() {}
 
 string Book::getId() const{
     return id;

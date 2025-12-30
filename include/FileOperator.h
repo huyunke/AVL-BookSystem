@@ -2,6 +2,7 @@
 #define AVL_BOOKSYSTEM_FILEOPERATOR_H
 #include <string>
 #include "AVLTree.h"
+#include "User.h"
 #include <unordered_map>
 using namespace std;
 
