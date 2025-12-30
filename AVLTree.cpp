@@ -1,5 +1,5 @@
-#include "include/AVLTree.h"
-#include "include/AVLNode.h"
+#include "AVLTree.h"
+#include "AVLNode.h"
 #include<iostream>
 using namespace std;
 

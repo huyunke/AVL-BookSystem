@@ -1,13 +1,26 @@
 #include <iostream>
-#include "include/Print.h"
-#include "include/AVLTree.h"
-#include "include/Book.h"
-#include "include/BookBorrowInfo.h"
-#include "include/User.h"
-#include "include/FileOperator.h"
+#include <fstream>
+#include "Print.h"
+#include "AVLTree.h"
+#include "Book.h"
+#include "BookBorrowInfo.h"
+#include "User.h"
+#include "FileOperator.h"
+#ifdef _WIN32
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#undef max
+#undef min
+#endif
 using namespace std;
 
 int main() {
+    #ifdef _WIN32
+    // 设置控制台代码页为 UTF-8
+    system("chcp 65001 > nul");
+    #endif
+
     //读取图书信息
     AVLTree* tree=new AVLTree();
     if (!FileOperator::readBookFile("book.txt",tree)) {

@@ -5,17 +5,17 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(AVL_BookSystem main.cpp
         Book.cpp
-        include/Book.h
+        Book.h
         User.cpp
-        include/User.h
+        User.h
         AVLNode.cpp
-        include/AVLNode.h
+        AVLNode.h
         AVLTree.cpp
-        include/AVLTree.h
+        AVLTree.h
         Print.cpp
-        include/Print.h
+        Print.h
         FileOperator.cpp
-        include/FileOperator.h
+        FileOperator.h
         BookBorrowInfo.cpp
-        include/BookBorrowInfo.h
+        BookBorrowInfo.h
 )

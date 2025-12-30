@@ -1,8 +1,8 @@
-#include "include/User.h"
+#include "User.h"
 #include<string>
-#include "include/BookBorrowInfo.h"
+#include "BookBorrowInfo.h"
 #include <iostream>
-#include "include/AVLTree.h"
+#include "AVLTree.h"
 using namespace std;
 
 User::User(string id,string name, string password,string type) {

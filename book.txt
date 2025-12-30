@@ -1,11 +1,10 @@
-B001 C++程序设计 谭浩强 none 1
-B002 数据结构 严蔚敏 none 1
-B003 算法导论 Thomas none 1
-B004 操作系统 汤小丹 none 1
-B005 计算机网络 谢希仁 none 1
-B006 数据库系统 王珊 none 1
-B007 编译原理 龙书 none 1
-B008 软件工程 张海藩 none 1
-B009 离散数学 左孝凌 none 1
-B010 计算机组成原理 唐朔飞 none 1
-
+B004 DesignPatterns Gamma - 1
+B002 IntroductionToAlgorithms Cormen - 1
+B001 C++Primer StanleyLippman - 1
+B003 CleanCode RobertMartin - 1
+B008 DatabaseSystems Elmasri - 1
+B006 ComputerNetworks Tanenbaum - 1
+B005 TheCProgrammingLanguage Kernighan - 1
+B007 OperatingSystems Silberschatz - 1
+B009 ArtificialIntelligence Russell - 1
+B010 ComputerArchitecture Patterson - 1
