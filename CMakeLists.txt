@@ -16,8 +16,6 @@ add_executable(AVL_BookSystem main.cpp
         include/Print.h
         FileOperator.cpp
         include/FileOperator.h
-        BookManager.cpp
-        include/BookManager.h
         BookBorrowInfo.cpp
         include/BookBorrowInfo.h
 )

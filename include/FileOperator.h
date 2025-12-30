@@ -2,15 +2,16 @@
 #define AVL_BOOKSYSTEM_FILEOPERATOR_H
 #include <string>
 #include "AVLTree.h"
+#include <unordered_map>
 using namespace std;
 
 class FileOperator {
     void static writeBookFile(ofstream& file,AVLNode* node);
 public:
-    void static readBookFile(string bookFilename,AVLTree* tree);
+    bool static readBookFile(string bookFilename,AVLTree* tree);
     void static writeBookFile(string bookFilename,AVLTree* tree);
-    void static readUserFile(string userFilename);
-    void static writeUserFile(string userFilename);
+    bool static readUserFile(string userFilename,unordered_map<string,User*>& userMap);
+    void static writeUserFile(string userFilename,User* user);
 };
 
 

@@ -9,6 +9,7 @@ void Print::printUserMenu() {
     cout<<"3. 归还图书"<<endl;
     cout<<"4. 修改密码"<<endl;
     cout<<"5. 退出"<<endl;
+    cout<<"返回请输入0"<<endl;
     cout<<"请输入你的选择：";
 }
 
@@ -18,6 +19,8 @@ void Print::printAdminMenu() {
     cout<<"3. 修改图书"<<endl;
     cout<<"4. 查询图书"<<endl;
     cout<<"5. 退出"<<endl;
+    cout<<"返回请输入0"<<endl;
+    cout<<"请输入你的选择：";
 }
 
 void Print::printWelcome() {
