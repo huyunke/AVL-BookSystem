@@ -10,6 +10,10 @@ Book::Book(string id, string name, string author, string borrowerId, bool status
     this->status = status;
 }
 
+Book::~Book() {
+    delete this;
+}
+
 string Book::getId() const{
     return id;
 }
@@ -30,18 +34,34 @@ bool Book::getStatus() const{
     return status;
 }
 
-void Book::printBookInfo() {
+void Book::printBookInfo(bool isAdmin) {
     cout<<"书名: "<<name<<endl;
     cout<<"作者: "<<author<<endl;
-    //cout<<"借阅者: "<<endl;
+    cout<<"id: "<<id<<endl;
+    if (status) {
+        cout<<"状态: 可借"<<endl;
+    } else {
+        cout<<"状态: 已借出"<<endl;
+    }
+    if (isAdmin) {
+        cout<<"借阅者id: "<<borrowerId<<endl;
+    }
 }
 
 void Book::setBookStatus(bool status) {
     this->status = status;
 }
 
-void Book::setBorrower(string userId) {
+void Book::setBorrowerId(string userId) {
     this->borrowerId = userId;
+}
+
+void Book::setBookName(string name) {
+    this->name = name;
+}
+
+void Book::setAuthor(string author) {
+    this->author = author;
 }
 
 bool Book::operator>(const Book &book) const {

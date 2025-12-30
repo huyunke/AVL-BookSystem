@@ -19,9 +19,11 @@ public:
     bool getStatus() const;
     string getBorrowerId() const;
     string getAuthor() const;
-    void printBookInfo();//打印图书信息
+    void printBookInfo(bool isAdmin);//打印图书信息
     void setBookStatus(bool status);
-    void setBorrower(string userId);
+    void setBorrowerId(string userId);
+    void setBookName(string name);
+    void setAuthor(string author);
     //重载比较运算符, 用于AVL树排序
     bool operator<(const Book& book1)const;
     bool operator>(const Book& book1)const;

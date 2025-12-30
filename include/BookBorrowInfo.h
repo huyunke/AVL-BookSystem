@@ -1,23 +1,19 @@
 #ifndef AVL_BOOKSYSTEM_BOOKBORROWINFO_H
 #define AVL_BOOKSYSTEM_BOOKBORROWINFO_H
-#include "Book.h"
 #include <string>
 #include <chrono>
-#include <vector>
-#include <ctime>
-#include <algorithm>
-#include <iomanip>
+
 using namespace std;
 
 class BookBorrowInfo {
-    Book book;
+    string bookId;
     time_t borrowTime;//借阅时间
     time_t returnTime;//最迟归还时间
     static const int MAX_BORROW_DAYS = 30;
 public:
-    BookBorrowInfo(Book book,time_t borrowTime, time_t returnTime);
+    BookBorrowInfo(string bookId);
     ~BookBorrowInfo();
-    Book getBook();
+    string getBookId();
     time_t getBorrowTime();
     time_t getReturnTime();
     bool isOverdue();

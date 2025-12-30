@@ -2,6 +2,7 @@
 #include<string>
 #include "include/BookBorrowInfo.h"
 #include <iostream>
+#include "include/AVLTree.h"
 using namespace std;
 
 User::User(string id,string name, string password,string type) {
@@ -31,13 +32,20 @@ string User::getType() {
     return type;
 }
 
-void User::addBorrowInfo(BookBorrowInfo info) {
+void User::addBorrowInfo(string bookId) {
+    BookBorrowInfo info(bookId);
     borrowInfo.push_back(info);
+    cout<<"=================================="<<endl;
+    cout<<"借阅书本成功"<<endl;
+    cout<<"请在"<<info.getReturnTime()<<"前归还"<<endl;
+    cout<<"逾期将被罚款"<<endl;
+    cout<<"=================================="<<endl;
 }
 
+//归还图书操作
 bool User::removeBorrowInfo(string bookId) {
     for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
-        if (it->getBook().getId() == bookId) {
+        if (it->getBookId() == bookId) {
             borrowInfo.erase(it);
             cout<<"归还书本成功"<<endl;
             return true;
@@ -46,8 +54,33 @@ bool User::removeBorrowInfo(string bookId) {
     return false;
 }
 
+//施工中
+void User::addBook(Book &book,AVLTree* tree) {
+    AVLNode* targetBook=tree->search(book.getId());
+    if (targetBook!=nullptr) {
+        cout<<"图书已存在"<<endl;
+        cout<<"请检查书本id是否正确"<<endl;
+        return;
+    }
+    tree->insert(book);
+}
+
 void User::printBorrowInfo() {
     for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
+        cout<<"=================================="<<endl;
         it->printBookBorrowInfo();
     }
+    cout<<"=================================="<<endl;
+}
+
+vector<BookBorrowInfo> User::getBorrowBookInfo() {
+    return borrowInfo;
+}
+
+string User::getBorrowBookId() {
+    string borrowBookIds;
+    for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
+        borrowBookIds+=" "+it->getBookId();
+    }
+    return borrowBookIds;
 }
