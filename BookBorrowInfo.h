@@ -19,9 +19,11 @@ public:
     time_t getReturnTime();
     string getFormattedBorrowTime();//获取格式化的借阅时间
     string getFormattedReturnTime();//获取格式化的归还时间
-    bool isOverdue();
     int getRemainDays()const;
     int getOverdueDays()const;
+    void setBookId(string bookId);
+
+    bool isOverdue();
     void printBookBorrowInfo();//打印图书借阅信息
 };
 

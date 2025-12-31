@@ -20,14 +20,13 @@ public:
     string getName();
     string getPassword();
     string getType();
+    vector<BookBorrowInfo> getBorrowBookInfo();
+    string getBorrowBookId();
+    void setPassword(string password);
     void addBorrowInfo(string bookId);//添加借阅信息
     void addBorrowInfoSilent(string bookId);//添加借阅信息（不显示消息，用于从文件读取）
     bool removeBorrowInfo(string bookId);//移除借阅信息，归还成功返回true，失败返回false
-    void addBook(Book &book,AVLTree* tree);//添加图书（管理员）
-    void removeBook(const string& bookId);//删除图书（管理员）
     void printBorrowInfo();//打印借阅信息
-    vector<BookBorrowInfo> getBorrowBookInfo();
-    string getBorrowBookId();
 };
 
 #endif //AVL_BOOKSYSTEM_USER_H

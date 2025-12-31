@@ -157,8 +157,20 @@ int main() {
                     user->printBorrowInfo();
                     break;
                 }
-                //修改密码:修改用户的密码(不知道做不做)
+                //修改密码:修改用户的密码
                 case 5: {
+                    cout<<"请输入旧密码：";
+                    string oldPassword;
+                    cin>>oldPassword;
+                    while (oldPassword!=user->getPassword()) {
+                        cout<<"密码错误"<<endl;
+                        cout<<"请重新输入旧密码：";
+                        cin>>oldPassword;
+                    }
+                    cout<<"请输入新密码：";
+                    string newPassword;
+                    cin>>newPassword;
+                    user->setPassword(newPassword);
                     break;
                 }
                 //退出
@@ -244,11 +256,28 @@ int main() {
                         if (author!="0") {
                             targetNode->book.setAuthor(author);
                         }
-                        //图书id修改不知道加不加，大致流程如下
+                        //图书id修改
                         //1.删除原图书
                         //2.根据新信息生成图书
                         //3.插入新图书
                         //4.根据借阅者的借阅信息修改借阅信息，需要把其中的图书id修改为新图书id
+                        cout<<"请输入要修改的图书id：";//不修改就输入0
+                        string newBookId;
+                        cin>>newBookId;
+                        if (newBookId!="0") {
+                            string borrowerId=targetNode->book.getBorrowerId();
+                            Book newBook(newBookId,targetNode->book.getName(),targetNode->book.getAuthor(),targetNode->book.getBorrowerId(),targetNode->book.getStatus());
+                            tree->remove(bookId);
+                            tree->insert(newBook);
+                            User* user =userMap[borrowerId];
+                            vector<BookBorrowInfo> borrowInfo=user->getBorrowBookInfo();
+                            for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
+                                if (it->getBookId() == bookId) {
+                                    it->setBookId(newBookId);
+                                    break;
+                                }
+                            }
+                        }
                         cout<<"请输入要修改的图书id：";
                     }
                     break;

@@ -30,6 +30,22 @@ string User::getType() {
     return type;
 }
 
+vector<BookBorrowInfo> User::getBorrowBookInfo() {
+    return borrowInfo;
+}
+
+string User::getBorrowBookId() {
+    string borrowBookIds;
+    for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
+        borrowBookIds+=" "+it->getBookId();
+    }
+    return borrowBookIds;
+}
+
+void User::setPassword(string password) {
+    this->password = password;
+}
+
 void User::addBorrowInfo(string bookId) {
     BookBorrowInfo info(bookId);
     borrowInfo.push_back(info);
@@ -57,17 +73,6 @@ bool User::removeBorrowInfo(string bookId) {
     return false;
 }
 
-//施工中
-void User::addBook(Book &book,AVLTree* tree) {
-    AVLNode* targetBook=tree->search(book.getId());
-    if (targetBook!=nullptr) {
-        cout<<"图书已存在"<<endl;
-        cout<<"请检查书本id是否正确"<<endl;
-        return;
-    }
-    tree->insert(book);
-}
-
 void User::printBorrowInfo() {
     if (borrowInfo.size()==0) {
         cout<<"您未借阅任何图书"<<endl;
@@ -78,16 +83,4 @@ void User::printBorrowInfo() {
         it->printBookBorrowInfo();
     }
     cout<<"=================================="<<endl;
-}
-
-vector<BookBorrowInfo> User::getBorrowBookInfo() {
-    return borrowInfo;
-}
-
-string User::getBorrowBookId() {
-    string borrowBookIds;
-    for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
-        borrowBookIds+=" "+it->getBookId();
-    }
-    return borrowBookIds;
 }

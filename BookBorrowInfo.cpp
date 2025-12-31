@@ -44,12 +44,6 @@ string BookBorrowInfo::getFormattedReturnTime() {
     return formatTime(returnTime);
 }
 
-bool BookBorrowInfo::isOverdue() {
-    auto now = chrono::system_clock::now();
-    time_t currentTime = chrono::system_clock::to_time_t(now);
-    return currentTime > returnTime;
-}
-
 int BookBorrowInfo::getOverdueDays()const {
     auto now = chrono::system_clock::now();
     time_t currentTime = chrono::system_clock::to_time_t(now);
@@ -60,6 +54,16 @@ int BookBorrowInfo::getRemainDays()const {
     auto now = chrono::system_clock::now();
     time_t currentTime = chrono::system_clock::to_time_t(now);
     return (returnTime - currentTime) / (24 * 60 * 60);
+}
+
+void BookBorrowInfo::setBookId(string bookId) {
+    this->bookId = bookId;
+}
+
+bool BookBorrowInfo::isOverdue() {
+    auto now = chrono::system_clock::now();
+    time_t currentTime = chrono::system_clock::to_time_t(now);
+    return currentTime > returnTime;
 }
 
 void BookBorrowInfo::printBookBorrowInfo() {
