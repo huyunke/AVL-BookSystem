@@ -209,7 +209,7 @@ int main() {
                         cout<<"请输入要添加的图书作者：";
                         string bookAuthor;
                         cin>>bookAuthor;
-                        Book book(bookId,bookName,bookAuthor,"",true);
+                        Book book(bookId,bookName,bookAuthor,"-",true);
                         tree->insert(book);
                         cout<<"请输入要添加的图书id：";
                     }
@@ -253,6 +253,14 @@ int main() {
                             cout<<"请输入要修改的图书id：";
                             continue;
                         }
+
+                        // 保存原始图书信息
+                        string oldBookId = bookId;
+                        string oldName = targetNode->book.getName();
+                        string oldAuthor = targetNode->book.getAuthor();
+                        string borrowerId = targetNode->book.getBorrowerId();
+                        bool bookStatus = targetNode->book.getStatus();
+
                         cout<<"不需要修改的字段请输入0"<<endl;
                         cout<<"请输入要修改的图书名称：";//不修改就输入0
                         string bookName;
@@ -260,12 +268,15 @@ int main() {
                         cout<<"请输入要修改的图书作者：";//不修改就输入0
                         string author;
                         cin>>author;
+
+                        // 更新名称和作者
                         if (bookName!="0") {
-                            targetNode->book.setBookName(bookName);
+                            oldName = bookName;
                         }
                         if (author!="0") {
-                            targetNode->book.setAuthor(author);
+                            oldAuthor = author;
                         }
+
                         //图书id修改
                         //1.删除原图书
                         //2.根据新信息生成图书（需要判断新书本id是否重复）
@@ -273,28 +284,45 @@ int main() {
                         //4.根据借阅者的借阅信息修改借阅信息，需要把其中的图书id修改为新图书id
                         cout<<"请输入要修改的图书id：";//不修改就输入0
                         string newBookId;
+                        bool idModified = false;
                         while (cin>>newBookId) {
-                            AVLNode* targetNode=tree->search(newBookId);
-                            if (targetNode==nullptr) {
-                                cout<<"图书id已存在"<<endl;
-                                cout<<"请重新输入要修改的图书id：";
+                            if (newBookId=="0") {
+                                // 不修改ID，使用原ID
+                                newBookId = oldBookId;
                                 break;
                             }
-                            string borrowerId=targetNode->book.getBorrowerId();
-                            Book newBook(newBookId,targetNode->book.getName(),
-                                targetNode->book.getAuthor(),targetNode->book.
-                                getBorrowerId(),targetNode->book.getStatus());
-                            tree->remove(bookId);
-                            tree->insert(newBook);
-                            User* user =userMap[borrowerId];
-                            vector<BookBorrowInfo> borrowInfo=user->getBorrowBookInfo();
-                            for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
-                                if (it->getBookId() == bookId) {
-                                    it->setBookId(newBookId);
-                                    break;
-                                }
+                            // 检查新ID是否已存在
+                            AVLNode* checkNode = tree->search(newBookId);
+                            if (checkNode) {
+                                cout<<"图书id已存在"<<endl;
+                                cout<<"请重新输入要修改的图书id：";
+                                continue;
                             }
+                            // 新ID有效
+                            idModified = true;
+                            break;
                         }
+
+                        // 如果只修改了名称或作者，直接更新
+                        if (!idModified) {
+                            targetNode->book.setBookName(oldName);
+                            targetNode->book.setAuthor(oldAuthor);
+                            cout<<"修改成功"<<endl;
+                        } else {
+                            // 需要修改ID，删除旧节点并插入新节点
+                            Book newBook(newBookId, oldName, oldAuthor, borrowerId, bookStatus);
+                            tree->remove(oldBookId);
+                            tree->insert(newBook);
+
+                            // 如果图书已借出，需要更新借阅者的借阅信息
+                            if (borrowerId != "-" && userMap.find(borrowerId) != userMap.end()) {
+                                User* borrower = userMap[borrowerId];
+                                // 更新借阅信息中的图书ID（保留借阅时间）
+                                borrower->updateBorrowBookId(oldBookId, newBookId);
+                            }
+                            cout<<"修改成功"<<endl;
+                        }
+
                         cout<<"请输入要修改的图书id：";
                     }
                     break;

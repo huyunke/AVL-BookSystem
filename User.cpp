@@ -90,6 +90,17 @@ bool User::removeBorrowInfo(string bookId) {
     return false;
 }
 
+//更新借阅信息中的图书ID（保留借阅时间）
+bool User::updateBorrowBookId(string oldBookId, string newBookId) {
+    for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
+        if (it->getBookId() == oldBookId) {
+            it->setBookId(newBookId);
+            return true;
+        }
+    }
+    return false;
+}
+
 //打印借阅信息
 void User::printBorrowInfo() {
     if (borrowInfo.size()==0) {

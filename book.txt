@@ -8,4 +8,4 @@ B007 OperatingSystems Silberschatz - 1
 B010 ComputerArchitecture Patterson - 1
 B009 ArtificialIntelligence Russell - 1
 B011 TestBook TestAuthor - 1
-B012 CodeComplete SteveMcConnell  1
+B012 CodeComplete SteveMcConnell - 1

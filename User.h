@@ -27,6 +27,7 @@ public:
     void addBorrowInfoSilent(string bookId);//添加借阅信息（不显示消息，用于从文件读取）
     void addBorrowInfoWithTime(string bookId, time_t borrowTime, time_t returnTime);//添加借阅信息（带时间参数，用于从文件读取）
     bool removeBorrowInfo(string bookId);//移除借阅信息，归还成功返回true，失败返回false
+    bool updateBorrowBookId(string oldBookId, string newBookId);//更新借阅信息中的图书ID
     void printBorrowInfo();//打印借阅信息
 };
 
