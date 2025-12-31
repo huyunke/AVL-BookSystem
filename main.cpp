@@ -95,7 +95,9 @@ int main() {
                             cout<<"请输入要查询的图书id：";
                             continue;
                         }
+                        cout<<"=================================="<<endl;
                         targetNode->book.printBookInfo(false);
+                        cout<<"=================================="<<endl;
                         cout<<"请输入要查询的图书id：";
                     }
                     break;
@@ -199,7 +201,7 @@ int main() {
                             cout<<"图书已存在"<<endl;
                             cout<<"请检查书本id是否正确"<<endl;
                             cout<<"请输入要添加的图书id：";
-                            break;
+                            continue;
                         }
                         cout<<"请输入要添加的图书名称：";
                         string bookName;
@@ -209,6 +211,7 @@ int main() {
                         cin>>bookAuthor;
                         Book book(bookId,bookName,bookAuthor,"",true);
                         tree->insert(book);
+                        cout<<"请输入要添加的图书id：";
                     }
                     break;
                 }
@@ -265,13 +268,18 @@ int main() {
                         }
                         //图书id修改
                         //1.删除原图书
-                        //2.根据新信息生成图书
+                        //2.根据新信息生成图书（需要判断新书本id是否重复）
                         //3.插入新图书
                         //4.根据借阅者的借阅信息修改借阅信息，需要把其中的图书id修改为新图书id
                         cout<<"请输入要修改的图书id：";//不修改就输入0
                         string newBookId;
-                        cin>>newBookId;
-                        if (newBookId!="0") {
+                        while (cin>>newBookId) {
+                            AVLNode* targetNode=tree->search(newBookId);
+                            if (targetNode==nullptr) {
+                                cout<<"图书id已存在"<<endl;
+                                cout<<"请重新输入要修改的图书id：";
+                                break;
+                            }
                             string borrowerId=targetNode->book.getBorrowerId();
                             Book newBook(newBookId,targetNode->book.getName(),
                                 targetNode->book.getAuthor(),targetNode->book.
