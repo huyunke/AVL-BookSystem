@@ -235,6 +235,7 @@ int main() {
                             continue;
                         }
                         tree->remove(bookId);
+                        cout << "成功删除图书"<< endl;
                         cout<<"请输入要删除的图书id：";
                     }
                     break;
@@ -262,10 +263,10 @@ int main() {
                         bool bookStatus = targetNode->book.getStatus();
 
                         cout<<"不需要修改的字段请输入0"<<endl;
-                        cout<<"请输入要修改的图书名称：";//不修改就输入0
+                        cout<<"请输入新的图书名称：";//不修改就输入0
                         string bookName;
                         cin>>bookName;
-                        cout<<"请输入要修改的图书作者：";//不修改就输入0
+                        cout<<"请输入新的图书作者：";//不修改就输入0
                         string author;
                         cin>>author;
 
@@ -282,7 +283,7 @@ int main() {
                         //2.根据新信息生成图书（需要判断新书本id是否重复）
                         //3.插入新图书
                         //4.根据借阅者的借阅信息修改借阅信息，需要把其中的图书id修改为新图书id
-                        cout<<"请输入要修改的图书id：";//不修改就输入0
+                        cout<<"请输入新的图书id：";//不修改就输入0
                         string newBookId;
                         bool idModified = false;
                         while (cin>>newBookId) {
@@ -321,6 +322,7 @@ int main() {
                                 borrower->updateBorrowBookId(oldBookId, newBookId);
                             }
                             cout<<"修改成功"<<endl;
+                            cout<<"=================================="<<endl;
                         }
 
                         cout<<"请输入要修改的图书id：";

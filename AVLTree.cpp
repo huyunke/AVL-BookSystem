@@ -196,7 +196,6 @@ void AVLTree::insert(const Book& book) {
 //删除结点
 void AVLTree::remove(const string &bookId) {
     root=remove(root,bookId);
-    cout << "成功删除图书"<< endl;
 }
 
 //查找结点
