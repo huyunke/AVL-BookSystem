@@ -14,26 +14,32 @@ User::User(string id,string name, string password,string type) {
 
 User::~User() {}
 
+//获取用户id
 string User::getId() {
     return id;
 }
 
+//获取用户名
 string User::getName() {
     return name;
 }
 
+//获取用户密码
 string User::getPassword() {
     return password;
 }
 
+//获取用户类型
 string User::getType() {
     return type;
 }
 
+//获取借阅图书信息
 vector<BookBorrowInfo> User::getBorrowBookInfo() {
     return borrowInfo;
 }
 
+//获取借阅图书id
 string User::getBorrowBookId() {
     string borrowBookIds;
     for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
@@ -42,10 +48,12 @@ string User::getBorrowBookId() {
     return borrowBookIds;
 }
 
+//设置用户密码
 void User::setPassword(string password) {
     this->password = password;
 }
 
+//添加借阅信息
 void User::addBorrowInfo(string bookId) {
     BookBorrowInfo info(bookId);
     borrowInfo.push_back(info);
@@ -56,12 +64,13 @@ void User::addBorrowInfo(string bookId) {
     cout<<"=================================="<<endl;
 }
 
+//添加借阅信息(不输出提示信息)
 void User::addBorrowInfoSilent(string bookId) {
     BookBorrowInfo info(bookId);
     borrowInfo.push_back(info);
 }
 
-//归还图书操作
+//移除借阅信息
 bool User::removeBorrowInfo(string bookId) {
     for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
         if (it->getBookId() == bookId) {
@@ -73,6 +82,7 @@ bool User::removeBorrowInfo(string bookId) {
     return false;
 }
 
+//打印借阅信息
 void User::printBorrowInfo() {
     if (borrowInfo.size()==0) {
         cout<<"您未借阅任何图书"<<endl;

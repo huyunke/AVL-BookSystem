@@ -96,7 +96,7 @@ bool FileOperator::readUserFile(string userFilename,unordered_map<string,User*>&
     return true;
 }
 
-//需要检查
+//将用户信息写入文件
 void FileOperator::writeUserFile(string userFilename,User* user) {
     // 先读取所有用户信息
     ifstream readUserFile(userFilename);
@@ -105,34 +105,24 @@ void FileOperator::writeUserFile(string userFilename,User* user) {
         return;
     }
 
-    vector<string> allLines;
+    vector<string> lines;
     string line;
-    bool userFound = false;
 
     while (getline(readUserFile, line)) {
-        istringstream iss(line);
+        stringstream ss(line);
         string id;
-        iss>>id;
+        ss>>id;
         if (id==user->getId()) {
             // 更新当前用户的信息
             string updatedLine = user->getId() + " " + user->getName() + " " +
                                 user->getPassword() + " " + user->getType() +
                                 user->getBorrowBookId();
-            allLines.push_back(updatedLine);
-            userFound = true;
+            lines.push_back(updatedLine);
         } else {
-            allLines.push_back(line);
+            lines.push_back(line);
         }
     }
     readUserFile.close();
-
-    // 如果用户不存在，添加新用户
-    if (!userFound) {
-        string newLine = user->getId() + " " + user->getName() + " " +
-                        user->getPassword() + " " + user->getType() +
-                        user->getBorrowBookId();
-        allLines.push_back(newLine);
-    }
 
     // 写回文件
     ofstream writeUserFile(userFilename);
@@ -141,8 +131,8 @@ void FileOperator::writeUserFile(string userFilename,User* user) {
         return;
     }
 
-    for (const auto& l : allLines) {
-        writeUserFile << l << endl;
+    for (int i = 0; i < lines.size(); i++) {
+        writeUserFile << lines[i] << endl;
     }
     writeUserFile.close();
 }

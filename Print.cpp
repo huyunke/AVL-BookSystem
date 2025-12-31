@@ -2,6 +2,7 @@
 #include <iostream>
 using namespace std;
 
+//打印普通用户菜单
 void Print::printUserMenu() {
     cout<<"=================================="<<endl;
     cout<<"请选择操作："<<endl;
@@ -14,6 +15,7 @@ void Print::printUserMenu() {
     cout<<"请输入你的选择：";
 }
 
+//打印管理员菜单
 void Print::printAdminMenu() {
     cout<<"1. 添加图书"<<endl;
     cout<<"2. 删除图书"<<endl;
@@ -23,6 +25,7 @@ void Print::printAdminMenu() {
     cout<<"请输入你的选择：";
 }
 
+//打印欢迎菜单
 void Print::printWelcome() {
     cout<<"================================"<<endl;
     cout<<"欢迎来到图书馆管理系统"<<endl;

@@ -146,7 +146,7 @@ int main() {
                         }
                         AVLNode* targetNode=tree->search(bookId);
                         targetNode->book.setBookStatus(true);
-                        targetNode->book.setBorrowerId("");
+                        targetNode->book.setBorrowerId("-");
                         cout<<"请输入要归还的图书id：";
                     }
                     break;
@@ -266,7 +266,9 @@ int main() {
                         cin>>newBookId;
                         if (newBookId!="0") {
                             string borrowerId=targetNode->book.getBorrowerId();
-                            Book newBook(newBookId,targetNode->book.getName(),targetNode->book.getAuthor(),targetNode->book.getBorrowerId(),targetNode->book.getStatus());
+                            Book newBook(newBookId,targetNode->book.getName(),
+                                targetNode->book.getAuthor(),targetNode->book.
+                                getBorrowerId(),targetNode->book.getStatus());
                             tree->remove(bookId);
                             tree->insert(newBook);
                             User* user =userMap[borrowerId];

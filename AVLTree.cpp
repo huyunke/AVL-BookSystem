@@ -3,6 +3,7 @@
 #include<iostream>
 using namespace std;
 
+//获取平衡因子
 int AVLTree::getBalance(AVLNode *node) {
     if (node==nullptr) {
         return 0;
@@ -12,6 +13,7 @@ int AVLTree::getBalance(AVLNode *node) {
     return leftHeight - rightHeight;
 }
 
+//左旋
 AVLNode* AVLTree::leftRotate(AVLNode *node) {
     AVLNode* right = node->right;
     AVLNode* rightLeft = right->left;
@@ -22,6 +24,7 @@ AVLNode* AVLTree::leftRotate(AVLNode *node) {
     return right;
 }
 
+//右旋
 AVLNode* AVLTree::rightRotate(AVLNode *node) {
     AVLNode* left = node->left;
     AVLNode* leftRight = left->right;
@@ -32,6 +35,7 @@ AVLNode* AVLTree::rightRotate(AVLNode *node) {
     return left;
 }
 
+//四种调整方式
 AVLNode* AVLTree::LL(AVLNode *node) {
     return rightRotate(node);
 }
@@ -50,6 +54,7 @@ AVLNode* AVLTree::RL(AVLNode *node) {
     return leftRotate(node);
 }
 
+//清空树
 void AVLTree::clear(AVLNode *node) {
     if (node==nullptr) {
         return;
@@ -61,23 +66,7 @@ void AVLTree::clear(AVLNode *node) {
     clear(left);
 }
 
-AVLNode* AVLTree::findParent(const string &bookId) const {
-    AVLNode* node=root;
-    AVLNode* parent=nullptr;
-    while (node!=nullptr) {
-        if (node->book.getId()==bookId) {
-            return parent;
-        } else if (node->book.getId()<bookId) {
-            parent=node;
-            node=node->right;
-        } else {
-            parent=node;
-            node=node->left;
-        }
-    }
-    return nullptr; // 节点不存在时返回nullptr
-}
-
+//检查平衡树是否平衡
 bool AVLTree::isBalanced(AVLNode *node) {
     if (node==nullptr) {
         return true;
@@ -89,6 +78,7 @@ bool AVLTree::isBalanced(AVLNode *node) {
     return isBalanced(node->left)&&isBalanced(node->right);
 }
 
+//插入结点（需要检查）
 AVLNode* AVLTree::insert(AVLNode* node,const Book &book) {
     if (!node)return new AVLNode(book);
 
@@ -117,6 +107,7 @@ AVLNode* AVLTree::insert(AVLNode* node,const Book &book) {
     return node;
 }
 
+//删除结点（需要检查）
 AVLNode* AVLTree::remove(AVLNode* node,const string &bookId) {
     if (!node) return nullptr; // 节点不存在，返回nullptr
 
@@ -173,6 +164,7 @@ AVLNode* AVLTree::remove(AVLNode* node,const string &bookId) {
     return node;
 }
 
+//更新高度
 void AVLTree::updateHeight(AVLNode* node) {
     if (!node) {
         return;
@@ -182,6 +174,7 @@ void AVLTree::updateHeight(AVLNode* node) {
     node->height = max(leftHeight, rightHeight) + 1;
 }
 
+//找到最小值结点
 AVLNode* AVLTree::minValueNode(AVLNode* node) {
     AVLNode* current = node;
     while (current && current->left) {
@@ -190,10 +183,23 @@ AVLNode* AVLTree::minValueNode(AVLNode* node) {
     return current;
 }
 
+//析构函数
 AVLTree::~AVLTree() {
     clear(root);
 }
 
+//插入结点
+void AVLTree::insert(const Book& book) {
+    root=insert(root,book);
+}
+
+//删除结点
+void AVLTree::remove(const string &bookId) {
+    root=remove(root,bookId);
+    cout << "成功删除图书"<< endl;
+}
+
+//查找结点
 AVLNode* AVLTree::search(const string &bookId) const {
     AVLNode* node=root;
     while (node!=nullptr) {
@@ -208,17 +214,9 @@ AVLNode* AVLTree::search(const string &bookId) const {
     return nullptr;
 }
 
+//中序遍历打印树，用于测试
 void AVLTree::printTree() {
 
-}
-
-void AVLTree::insert(const Book& book) {
-    root=insert(root,book);
-}
-
-void AVLTree::remove(const string &bookId) {
-    root=remove(root,bookId);
-    cout << "成功删除图书"<< endl;
 }
 
 AVLNode* AVLTree::getRoot() {

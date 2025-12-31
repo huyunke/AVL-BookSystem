@@ -8,16 +8,8 @@ struct AVLNode {
     AVLNode* left;
     AVLNode* right;
     int height;
-public:
     AVLNode(Book book):book(book),left(nullptr),right(nullptr),height(1){};
-    // ~AVLNode();
-    // AVLNode* getLeft();
-    // AVLNode* getRight();
-    // int getHeight();
-    // Book getBook();
-    // void setLeft(AVLNode* left);
-    // void setRight(AVLNode* right);
-    void updateHeight();
+    void updateHeight();//更新高度
 };
 
 

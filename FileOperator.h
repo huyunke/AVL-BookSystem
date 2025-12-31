@@ -9,10 +9,10 @@ using namespace std;
 class FileOperator {
     void static writeBookFile(ofstream& file,AVLNode* node);
 public:
-    bool static readBookFile(string bookFilename,AVLTree* tree);
-    void static writeBookFile(string bookFilename,AVLTree* tree);
-    bool static readUserFile(string userFilename,unordered_map<string,User*>& userMap);
-    void static writeUserFile(string userFilename,User* user);
+    bool static readBookFile(string bookFilename,AVLTree* tree);//从文件中读取图书信息
+    void static writeBookFile(string bookFilename,AVLTree* tree);//将图书信息写入文件
+    bool static readUserFile(string userFilename,unordered_map<string,User*>& userMap);//从文件中读取用户信息
+    void static writeUserFile(string userFilename,User* user);//将用户信息写入文件
 };
 
 

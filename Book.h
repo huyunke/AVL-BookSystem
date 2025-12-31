@@ -13,16 +13,17 @@ class Book {
 public:
     Book(string id, string name, string author,string borrowerId,bool status=true);
     ~Book();
-    string getId()const;
-    string getName()const;
-    bool getStatus() const;
-    string getBorrowerId() const;
-    string getAuthor() const;
+    string getId()const;//获取图书id
+    string getName()const;//获取图书名称
+    bool getStatus() const;//获取图书状态
+    string getBorrowerId() const;//获取借阅者id
+    string getAuthor() const;//获取图书作者
+    void setBookStatus(bool status);//设置图书状态
+    void setBorrowerId(string userId);//设置借阅者id
+    void setBookName(string name);//设置图书名称
+    void setAuthor(string author);//设置图书作者
     void printBookInfo(bool isAdmin);//打印图书信息
-    void setBookStatus(bool status);
-    void setBorrowerId(string userId);
-    void setBookName(string name);
-    void setAuthor(string author);
+
     //重载比较运算符, 用于AVL树排序
     bool operator<(const Book& book1)const;
     bool operator>(const Book& book1)const;

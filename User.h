@@ -8,21 +8,21 @@
 using namespace std;
 
 class User {
-    string id;
-    string name;
-    string password;
-    string type;
+    string id;//用户id
+    string name;//用户名
+    string password;//用户密码
+    string type;//用户类型
     vector<BookBorrowInfo> borrowInfo;//借阅图书的相关信息，可以借阅多本（设定归还时间/借阅数量限制）
 public:
     User(string id,string name, string password,string type="reader");
     ~User();
-    string getId();
-    string getName();
-    string getPassword();
-    string getType();
-    vector<BookBorrowInfo> getBorrowBookInfo();
-    string getBorrowBookId();
-    void setPassword(string password);
+    string getId();//获取用户id
+    string getName();//获取用户名
+    string getPassword();//获取用户密码
+    string getType();//获取用户类型
+    vector<BookBorrowInfo> getBorrowBookInfo();//获取借阅图书信息
+    string getBorrowBookId();//获取借阅图书id
+    void setPassword(string password);//设置用户密码
     void addBorrowInfo(string bookId);//添加借阅信息
     void addBorrowInfoSilent(string bookId);//添加借阅信息（不显示消息，用于从文件读取）
     bool removeBorrowInfo(string bookId);//移除借阅信息，归还成功返回true，失败返回false
