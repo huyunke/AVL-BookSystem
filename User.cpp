@@ -35,9 +35,14 @@ void User::addBorrowInfo(string bookId) {
     borrowInfo.push_back(info);
     cout<<"=================================="<<endl;
     cout<<"借阅书本成功"<<endl;
-    cout<<"请在"<<info.getReturnTime()<<"前归还"<<endl;
+    cout<<"请在 "<<info.getFormattedReturnTime()<<" 前归还"<<endl;
     cout<<"逾期将被罚款"<<endl;
     cout<<"=================================="<<endl;
+}
+
+void User::addBorrowInfoSilent(string bookId) {
+    BookBorrowInfo info(bookId);
+    borrowInfo.push_back(info);
 }
 
 //归还图书操作
@@ -64,6 +69,10 @@ void User::addBook(Book &book,AVLTree* tree) {
 }
 
 void User::printBorrowInfo() {
+    if (borrowInfo.size()==0) {
+        cout<<"您未借阅任何图书"<<endl;
+        return;
+    }
     for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
         cout<<"=================================="<<endl;
         it->printBookBorrowInfo();

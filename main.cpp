@@ -21,16 +21,21 @@ int main() {
     system("chcp 65001 > nul");
     #endif
 
+    string bookFilePath = "D:\\CLion\\AVL-BookSystem\\book.txt";
+    string userFilePath = "D:\\CLion\\AVL-BookSystem\\user.txt";
+
     //读取图书信息
     AVLTree* tree=new AVLTree();
-    if (!FileOperator::readBookFile("book.txt",tree)) {
+    if (!FileOperator::readBookFile(bookFilePath,tree)) {
         cout<<"读取图书文件失败"<<endl;
+        cout<<"文件路径: "<<bookFilePath<<endl;
         return 0;
     }
     //读取用户信息
     unordered_map<string,User*> userMap;
-    if (!FileOperator::readUserFile("user.txt",userMap)) {
+    if (!FileOperator::readUserFile(userFilePath,userMap)) {
         cout<<"读取用户文件失败"<<endl;
+        cout<<"文件路径: "<<userFilePath<<endl;
         return 0;
     }
 
@@ -49,7 +54,7 @@ int main() {
     cin>>password;
     while (userMap[id]->getPassword()!=password) {
         cout<<"密码错误"<<endl;
-        cout<<"请重新输入密码："<<endl;
+        cout<<"请重新输入密码：";
         cin>>password;
     }
     cout<<"登录成功！"<<endl;
@@ -72,7 +77,8 @@ int main() {
         Print::printUserMenu();
         int choice;
         cin>>choice;
-        while (choice!=5) {
+        cout<<"=================================="<<endl;
+        while (choice!=6) {
             switch (choice) {
                 //查询图书
                 //根据id查找到书本，并输出书本信息（包括是否被借阅）
@@ -145,20 +151,29 @@ int main() {
                     }
                     break;
                 }
-                //修改密码:修改用户的密码(不知道做不做)
-                case 4:
+
+                //查询借阅信息
+                case 4: {
+                    user->printBorrowInfo();
                     break;
+                }
+                //修改密码:修改用户的密码(不知道做不做)
+                case 5: {
+                    break;
+                }
                 //退出
                 default:
                     break;
             }
             Print::printUserMenu();
             cin>>choice;
+            cout<<"=================================="<<endl;
         }
     } else {
         Print::printAdminMenu();
         int choice;
         cin>>choice;
+        cout<<"=================================="<<endl;
         while (choice!=5) {
             switch (choice) {
                 //添加图书
@@ -262,11 +277,12 @@ int main() {
             }
             Print::printAdminMenu();
             cin>>choice;
+            cout<<"=================================="<<endl;
         }
     }
 
     //更新数据
-    FileOperator::writeBookFile("book.txt",tree);
-    FileOperator::writeUserFile("user.txt",user);
+    FileOperator::writeBookFile(bookFilePath,tree);
+    FileOperator::writeUserFile(userFilePath,user);
     return 0;
 }

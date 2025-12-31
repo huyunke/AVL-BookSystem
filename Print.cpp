@@ -3,13 +3,14 @@
 using namespace std;
 
 void Print::printUserMenu() {
+    cout<<"=================================="<<endl;
     cout<<"请选择操作："<<endl;
     cout<<"1. 查询图书"<<endl;
     cout<<"2. 借阅图书"<<endl;
     cout<<"3. 归还图书"<<endl;
-    cout<<"4. 修改密码"<<endl;
-    cout<<"5. 退出"<<endl;
-    cout<<"返回请输入0"<<endl;
+    cout<<"4. 查看借阅信息"<<endl;
+    cout<<"5. 修改密码"<<endl;
+    cout<<"6. 退出"<<endl;
     cout<<"请输入你的选择：";
 }
 
@@ -19,7 +20,6 @@ void Print::printAdminMenu() {
     cout<<"3. 修改图书"<<endl;
     cout<<"4. 查询图书"<<endl;
     cout<<"5. 退出"<<endl;
-    cout<<"返回请输入0"<<endl;
     cout<<"请输入你的选择：";
 }
 

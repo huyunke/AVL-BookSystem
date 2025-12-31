@@ -87,7 +87,7 @@ bool FileOperator::readUserFile(string userFilename,unordered_map<string,User*>&
         User* user =new User(id,name,password,type);
         string bookId;
         while (iss>>bookId) {
-            user->addBorrowInfo(bookId);
+            user->addBorrowInfoSilent(bookId);
         }
         userMap.insert({id,user});
     }

@@ -1,5 +1,7 @@
 #include "BookBorrowInfo.h"
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 
 BookBorrowInfo::BookBorrowInfo(string bookId)  {
     this->bookId = bookId;
@@ -25,6 +27,23 @@ time_t BookBorrowInfo::getReturnTime() {
     return returnTime;
 }
 
+string BookBorrowInfo::formatTime(time_t time) {
+    struct tm* timeinfo = localtime(&time);
+    ostringstream oss;
+    oss << (timeinfo->tm_year + 1900) << "/"
+        << setfill('0') << setw(2) << (timeinfo->tm_mon + 1) << "/"
+        << setfill('0') << setw(2) << timeinfo->tm_mday;
+    return oss.str();
+}
+
+string BookBorrowInfo::getFormattedBorrowTime() {
+    return formatTime(borrowTime);
+}
+
+string BookBorrowInfo::getFormattedReturnTime() {
+    return formatTime(returnTime);
+}
+
 bool BookBorrowInfo::isOverdue() {
     auto now = chrono::system_clock::now();
     time_t currentTime = chrono::system_clock::to_time_t(now);
@@ -45,12 +64,12 @@ int BookBorrowInfo::getRemainDays()const {
 
 void BookBorrowInfo::printBookBorrowInfo() {
     cout<<"书本id: "<<bookId<<endl;
-    cout<<"借阅时间: "<<borrowTime<<endl;
+    cout<<"借阅时间: "<<getFormattedBorrowTime()<<endl;
     if (isOverdue()) {
         cout<<"已逾期"<<getOverdueDays()<<"天"<<endl;
         cout<<"请尽快归还"<<endl;
         return ;
     }
-    cout<<"最迟归还时间: "<<returnTime<<endl;
+    cout<<"最迟归还时间: "<<getFormattedReturnTime()<<endl;
     cout<<"距离归还时间还有"<<getRemainDays()<<"天"<<endl;
 }

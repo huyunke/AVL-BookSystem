@@ -1,5 +1,6 @@
-U001 ZhangSan 123456 reader
-U002 LiSi 123456 reader
+U001 ZhangSan 123456 reader B001 B003 B004 B008
+U002 LiSi 123456 reader B002
 U003 WangWu 123456 reader
 U004 ZhaoLiu 123456 reader
 admin Administrator admin123 admin
+
