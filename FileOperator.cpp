@@ -57,6 +57,7 @@ void FileOperator::writeBookFile(string bookFilename,AVLTree* tree) {
     writeBookFile(bookFile,node);
 }
 
+//利用递归遍历AVL树结点，将其写入文件
 void FileOperator::writeBookFile(ofstream& file,AVLNode* node) {
     if (node==nullptr) {
         return;
@@ -66,6 +67,7 @@ void FileOperator::writeBookFile(ofstream& file,AVLNode* node) {
     writeBookFile(file,node->right);
 }
 
+//从文件中读取用户信息
 bool FileOperator::readUserFile(string userFilename,unordered_map<string,User*>& userMap) {
     ifstream userFile(userFilename);
     if (!userFile) {
