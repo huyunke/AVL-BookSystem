@@ -13,6 +13,13 @@ BookBorrowInfo::BookBorrowInfo(string bookId)  {
     this->returnTime = returnTime;
 }
 
+//带时间参数的构造函数
+BookBorrowInfo::BookBorrowInfo(string bookId, time_t borrowTime, time_t returnTime) {
+    this->bookId = bookId;
+    this->borrowTime = borrowTime;
+    this->returnTime = returnTime;
+}
+
 BookBorrowInfo::~BookBorrowInfo() {}
 
 //获取图书id
@@ -67,6 +74,16 @@ int BookBorrowInfo::getRemainDays()const {
 //设置图书id
 void BookBorrowInfo::setBookId(string bookId) {
     this->bookId = bookId;
+}
+
+//设置借阅时间
+void BookBorrowInfo::setBorrowTime(time_t borrowTime) {
+    this->borrowTime = borrowTime;
+}
+
+//设置归还时间
+void BookBorrowInfo::setReturnTime(time_t returnTime) {
+    this->returnTime = returnTime;
 }
 
 //判断是否逾期

@@ -67,7 +67,7 @@ void FileOperator::writeBookFile(ofstream& file,AVLNode* node) {
     writeBookFile(file,node->right);
 }
 
-//从文件中读取用户信息
+//从文件中读取用户信息（需要检查）
 bool FileOperator::readUserFile(string userFilename,unordered_map<string,User*>& userMap) {
     ifstream userFile(userFilename);
     if (!userFile) {
@@ -87,9 +87,28 @@ bool FileOperator::readUserFile(string userFilename,unordered_map<string,User*>&
             continue;
         }
         User* user =new User(id,name,password,type);
-        string bookId;
-        while (iss>>bookId) {
-            user->addBorrowInfoSilent(bookId);
+        string borrowData;
+        while (iss>>borrowData) {
+            // 解析借阅数据格式：bookId:borrowTime:returnTime
+            size_t firstColon = borrowData.find(':');
+            if (firstColon == string::npos) {
+                // 兼容旧格式：只有bookId
+                user->addBorrowInfoSilent(borrowData);
+            } else {
+                // 新格式：bookId:borrowTime:returnTime
+                size_t secondColon = borrowData.find(':', firstColon + 1);
+                if (secondColon == string::npos) {
+                    // 格式错误，跳过
+                    continue;
+                }
+                string bookId = borrowData.substr(0, firstColon);
+                string borrowTimeStr = borrowData.substr(firstColon + 1, secondColon - firstColon - 1);
+                string returnTimeStr = borrowData.substr(secondColon + 1);
+
+                time_t borrowTime = stoll(borrowTimeStr);
+                time_t returnTime = stoll(returnTimeStr);
+                user->addBorrowInfoWithTime(bookId, borrowTime, returnTime);
+            }
         }
         userMap.insert({id,user});
     }
@@ -116,7 +135,7 @@ void FileOperator::writeUserFile(string userFilename,User* user) {
             // 更新当前用户的信息
             string updatedLine = user->getId() + " " + user->getName() + " " +
                                 user->getPassword() + " " + user->getType() +
-                                user->getBorrowBookId();
+                                user->getBorrowBookDataWithTime();
             lines.push_back(updatedLine);
         } else {
             lines.push_back(line);

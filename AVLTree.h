@@ -26,6 +26,7 @@ class AVLTree {
     AVLNode* remove(AVLNode* node,const string& bookId);//删除节点
     void updateHeight(AVLNode* node);//更新高度
     AVLNode* minValueNode(AVLNode* node);//找到最小值结点
+    void printTree(AVLNode* node);
 public:
     AVLTree():root(nullptr){};
     ~AVLTree();

@@ -216,7 +216,17 @@ AVLNode* AVLTree::search(const string &bookId) const {
 
 //中序遍历打印树，用于测试
 void AVLTree::printTree() {
+    cout<<"中序遍历打印树"<<endl;
+    printTree(root);
+}
 
+void AVLTree::printTree(AVLNode* node) {
+    if (node==nullptr) {
+        return;
+    }
+    printTree(node->left);
+    cout<<node->book.getId()<<endl;
+    printTree(node->right);
 }
 
 AVLNode* AVLTree::getRoot() {

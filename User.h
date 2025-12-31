@@ -21,10 +21,11 @@ public:
     string getPassword();//获取用户密码
     string getType();//获取用户类型
     vector<BookBorrowInfo> getBorrowBookInfo();//获取借阅图书信息
-    string getBorrowBookId();//获取借阅图书id
+    string getBorrowBookDataWithTime();//获取借阅图书数据（包含时间信息）
     void setPassword(string password);//设置用户密码
     void addBorrowInfo(string bookId);//添加借阅信息
     void addBorrowInfoSilent(string bookId);//添加借阅信息（不显示消息，用于从文件读取）
+    void addBorrowInfoWithTime(string bookId, time_t borrowTime, time_t returnTime);//添加借阅信息（带时间参数，用于从文件读取）
     bool removeBorrowInfo(string bookId);//移除借阅信息，归还成功返回true，失败返回false
     void printBorrowInfo();//打印借阅信息
 };

@@ -38,6 +38,7 @@ int main() {
         cout<<"文件路径: "<<userFilePath<<endl;
         return 0;
     }
+    tree->printTree();
 
     //登录
     Print::printWelcome();
@@ -46,7 +47,7 @@ int main() {
     cin>>id;
     while(userMap.find(id)==userMap.end()) {
         cout<<"用户不存在"<<endl;
-        cout<<"请检查id是否正确并重新输入："<<endl;
+        cout<<"请检查id是否正确并重新输入：";
         cin>>id;
     }
     cout<<"请输入密码：";
@@ -218,9 +219,15 @@ int main() {
                     string bookId;
                     while (cin>>bookId) {
                         if (bookId=="0") break;
-                        if (!tree->search(bookId)) {
+                        AVLNode* targetNode=tree->search(bookId);
+                        if (!targetNode) {
                             cout<<"图书不存在"<<endl;
                             cout<<"请检查书本id是否正确"<<endl;
+                            cout<<"请输入要删除的图书id：";
+                            continue;
+                        }
+                        if (!targetNode->book.getStatus()) {
+                            cout<<"图书已借出，无法删除"<<endl;
                             cout<<"请输入要删除的图书id：";
                             continue;
                         }

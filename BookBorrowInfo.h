@@ -13,6 +13,7 @@ class BookBorrowInfo {
     string formatTime(time_t time);//格式化时间为"年/月/日"
 public:
     BookBorrowInfo(string bookId);
+    BookBorrowInfo(string bookId, time_t borrowTime, time_t returnTime);//带时间参数的构造函数
     ~BookBorrowInfo();
     string getBookId();//获取图书id
     time_t getBorrowTime();//获取借阅时间
@@ -22,6 +23,8 @@ public:
     int getOverdueDays()const;//获取逾期天数
     int getRemainDays()const;//获取剩余天数
     void setBookId(string bookId);//设置图书id
+    void setBorrowTime(time_t borrowTime);//设置借阅时间
+    void setReturnTime(time_t returnTime);//设置归还时间
 
     bool isOverdue();//判断是否逾期
     void printBookBorrowInfo();//打印借阅信息
