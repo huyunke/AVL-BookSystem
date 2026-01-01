@@ -115,7 +115,7 @@ bool FileOperator::readUserFile(string userFilename,unordered_map<string,User*>&
     return true;
 }
 
-//将用户信息写入文件
+//将当前用户信息重新写入文件
 void FileOperator::writeUserFile(string userFilename,User* user) {
     // 先读取所有用户信息
     ifstream readUserFile(userFilename);
@@ -154,4 +154,22 @@ void FileOperator::writeUserFile(string userFilename,User* user) {
         writeUserFile << lines[i] << endl;
     }
     writeUserFile.close();
+}
+
+//将所有用户信息写入文件
+void FileOperator::writeAllUsersFile(string userFilename,unordered_map<string,User*>& userMap) {
+    ofstream userFile(userFilename);
+    if (!userFile) {
+        cout << "无法打开用户文件进行写入" << endl;
+        return;
+    }
+
+    // 遍历所有用户并写入文件
+    for (auto& pair : userMap) {
+        User* user = pair.second;
+        userFile << user->getId() << " " << user->getName() << " "
+                 << user->getPassword() << " " << user->getType()
+                 << user->getBorrowBookDataWithTime() << endl;
+    }
+    userFile.close();
 }

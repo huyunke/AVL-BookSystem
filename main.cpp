@@ -177,8 +177,10 @@ int main() {
                     break;
                 }
                 //退出
-                default:
+                default: {
+                    cout<<"指令无效请重新输入";
                     break;
+                }
             }
             Print::printUserMenu();
             cin>>choice;
@@ -348,8 +350,10 @@ int main() {
                     }
                     break;
                 }
-                default:
+                default: {
+                    cout<<"指令无效请重新输入";
                     break;
+                }
             }
             Print::printAdminMenu();
             cin>>choice;
@@ -359,6 +363,11 @@ int main() {
 
     //更新数据
     FileOperator::writeBookFile(bookFilePath,tree);
-    FileOperator::writeUserFile(userFilePath,user);
+    if (user->getType()=="reader") {
+        FileOperator::writeUserFile(userFilePath,user);
+    }
+    else {
+        FileOperator::writeAllUsersFile(userFilePath,userMap);
+    }
     return 0;
 }

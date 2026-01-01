@@ -12,7 +12,8 @@ public:
     bool static readBookFile(string bookFilename,AVLTree* tree);//从文件中读取图书信息
     void static writeBookFile(string bookFilename,AVLTree* tree);//将图书信息写入文件
     bool static readUserFile(string userFilename,unordered_map<string,User*>& userMap);//从文件中读取用户信息
-    void static writeUserFile(string userFilename,User* user);//将用户信息写入文件
+    void static writeUserFile(string userFilename,User* user);//将当前用户信息重新写入文件
+    void static writeAllUsersFile(string userFilename,unordered_map<string,User*>& userMap);//将所有用户信息写入文件
 };
 
 
