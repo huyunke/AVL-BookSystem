@@ -17,7 +17,7 @@ using namespace std;
 
 int main() {
     #ifdef _WIN32
-    // 设置控制台代码页为 UTF-8
+    //设置控制台代码页为UTF-8
     system("chcp 65001 > nul");
     #endif
 
@@ -257,7 +257,7 @@ int main() {
                             continue;
                         }
 
-                        // 保存原始图书信息
+                        //保存原始图书信息
                         string oldBookId = bookId;
                         string oldName = targetNode->book.getName();
                         string oldAuthor = targetNode->book.getAuthor();
@@ -272,7 +272,7 @@ int main() {
                         string author;
                         cin>>author;
 
-                        // 更新名称和作者
+                        //更新名称和作者
                         if (bookName!="0") {
                             oldName = bookName;
                         }
@@ -289,38 +289,37 @@ int main() {
                         string newBookId;
                         bool idModified = false;
                         while (cin>>newBookId) {
+                            //不修改ID，使用原ID
                             if (newBookId=="0") {
-                                // 不修改ID，使用原ID
-                                newBookId = oldBookId;
                                 break;
                             }
-                            // 检查新ID是否已存在
+                            //检查新ID是否已存在
                             AVLNode* checkNode = tree->search(newBookId);
                             if (checkNode) {
                                 cout<<"图书id已存在"<<endl;
                                 cout<<"请重新输入要修改的图书id：";
                                 continue;
                             }
-                            // 新ID有效
+                            //新ID有效
                             idModified = true;
                             break;
                         }
 
-                        // 如果只修改了名称或作者，直接更新
+                        //如果只修改了名称或作者，直接更新
                         if (!idModified) {
                             targetNode->book.setBookName(oldName);
                             targetNode->book.setAuthor(oldAuthor);
                             cout<<"修改成功"<<endl;
                         } else {
-                            // 需要修改ID，删除旧节点并插入新节点
+                            //需要修改ID，删除旧节点并插入新节点
                             Book newBook(newBookId, oldName, oldAuthor, borrowerId, bookStatus);
                             tree->remove(oldBookId);
                             tree->insert(newBook);
 
-                            // 如果图书已借出，需要更新借阅者的借阅信息
+                            //如果图书已借出，需要更新借阅者的借阅信息
                             if (borrowerId != "-" && userMap.find(borrowerId) != userMap.end()) {
                                 User* borrower = userMap[borrowerId];
-                                // 更新借阅信息中的图书ID（保留借阅时间）
+                                //更新借阅信息中的图书ID（保留借阅时间）
                                 borrower->updateBorrowBookId(oldBookId, newBookId);
                             }
                             cout<<"修改成功"<<endl;

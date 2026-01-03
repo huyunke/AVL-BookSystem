@@ -109,14 +109,14 @@ AVLNode* AVLTree::insert(AVLNode* node,const Book &book) {
 
 //删除结点（需要检查）
 AVLNode* AVLTree::remove(AVLNode* node,const string &bookId) {
-    if (!node) return nullptr; // 节点不存在，返回nullptr
+    if (!node) return nullptr; //节点不存在，返回nullptr
 
     if (node->book.getId()>bookId) {
         node->left=remove(node->left,bookId);
     } else if (node->book.getId()<bookId) {
         node->right=remove(node->right,bookId);
     } else {
-        // 找到要删除的节点
+        //找到要删除的节点
         if (!node->left||!node->right) {
             AVLNode* temp=node->left?node->left:node->right;
             //没有子节点
@@ -129,7 +129,7 @@ AVLNode* AVLTree::remove(AVLNode* node,const string &bookId) {
             }
             delete temp;
         } else {
-            // 有两个子节点
+            //有两个子节点
             AVLNode* temp= minValueNode(node->right);
             node->book=temp->book;
             node->right=remove(node->right,temp->book.getId());
@@ -143,20 +143,20 @@ AVLNode* AVLTree::remove(AVLNode* node,const string &bookId) {
     updateHeight(node);
     int balance = getBalance(node);
 
-    // 左左情况
+    //左左情况
     if (balance>1&&getBalance(node->left)>=0) {
         return rightRotate(node);
     }
-    // 左右情况
+    //左右情况
     if (balance>1&&getBalance(node->left)<0) {
         node->left=leftRotate(node->left);
         return rightRotate(node);
     }
-    // 右右情况
+    //右右情况
     if (balance<-1&&getBalance(node->right)<=0) {
         return leftRotate(node);
     }
-    // 右左情况
+    //右左情况
     if (balance<-1&&getBalance(node->right)>0) {
         node->right=rightRotate(node->right);
         return leftRotate(node);

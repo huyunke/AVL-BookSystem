@@ -89,26 +89,21 @@ bool FileOperator::readUserFile(string userFilename,unordered_map<string,User*>&
         User* user =new User(id,name,password,type);
         string borrowData;
         while (iss>>borrowData) {
-            // 解析借阅数据格式：bookId:borrowTime:returnTime
+            //解析借阅数据格式：bookId:borrowTime:returnTime
             size_t firstColon = borrowData.find(':');
-            if (firstColon == string::npos) {
-                // 兼容旧格式：只有bookId
-                user->addBorrowInfoSilent(borrowData);
-            } else {
-                // 新格式：bookId:borrowTime:returnTime
-                size_t secondColon = borrowData.find(':', firstColon + 1);
-                if (secondColon == string::npos) {
-                    // 格式错误，跳过
-                    continue;
-                }
-                string bookId = borrowData.substr(0, firstColon);
-                string borrowTimeStr = borrowData.substr(firstColon + 1, secondColon - firstColon - 1);
-                string returnTimeStr = borrowData.substr(secondColon + 1);
-
-                time_t borrowTime = stoll(borrowTimeStr);
-                time_t returnTime = stoll(returnTimeStr);
-                user->addBorrowInfoWithTime(bookId, borrowTime, returnTime);
+            //格式：bookId:borrowTime:returnTime
+            size_t secondColon = borrowData.find(':', firstColon + 1);
+            if (secondColon == string::npos) {
+                //格式错误，跳过
+                continue;
             }
+            string bookId = borrowData.substr(0, firstColon);
+            string borrowTimeStr = borrowData.substr(firstColon + 1, secondColon - firstColon - 1);
+            string returnTimeStr = borrowData.substr(secondColon + 1);
+
+            time_t borrowTime = stoll(borrowTimeStr);
+            time_t returnTime = stoll(returnTimeStr);
+            user->addBorrowInfoWithTime(bookId, borrowTime, returnTime);
         }
         userMap.insert({id,user});
     }
@@ -117,7 +112,7 @@ bool FileOperator::readUserFile(string userFilename,unordered_map<string,User*>&
 
 //将当前用户信息重新写入文件
 void FileOperator::writeUserFile(string userFilename,User* user) {
-    // 先读取所有用户信息
+    //先读取所有用户信息
     ifstream readUserFile(userFilename);
     if (!readUserFile) {
         cout << "无法打开用户文件进行读取" << endl;
@@ -132,7 +127,7 @@ void FileOperator::writeUserFile(string userFilename,User* user) {
         string id;
         ss>>id;
         if (id==user->getId()) {
-            // 更新当前用户的信息
+            //更新当前用户的信息
             string updatedLine = user->getId() + " " + user->getName() + " " +
                                 user->getPassword() + " " + user->getType() +
                                 user->getBorrowBookDataWithTime();
@@ -143,7 +138,7 @@ void FileOperator::writeUserFile(string userFilename,User* user) {
     }
     readUserFile.close();
 
-    // 写回文件
+    //写回文件
     ofstream writeUserFile(userFilename);
     if (!writeUserFile) {
         cout << "无法打开用户文件进行写入" << endl;
@@ -164,7 +159,7 @@ void FileOperator::writeAllUsersFile(string userFilename,unordered_map<string,Us
         return;
     }
 
-    // 遍历所有用户并写入文件
+    //遍历所有用户并写入文件
     for (auto& pair : userMap) {
         User* user = pair.second;
         userFile << user->getId() << " " << user->getName() << " "
