@@ -38,8 +38,6 @@ int main() {
         cout<<"文件路径: "<<userFilePath<<endl;
         return 0;
     }
-    tree->printTree();
-    tree->printAVLTree();
 
     //登录
     Print::printWelcome();
@@ -377,5 +375,16 @@ int main() {
     else {
         FileOperator::writeAllUsersFile(userFilePath,userMap);
     }
+
+    //释放内存
+    //释放AVL树
+    delete tree;
+
+    //释放用户对象
+    for (auto it = userMap.begin(); it != userMap.end(); ++it) {
+        delete it->second;
+    }
+    userMap.clear();
+
     return 0;
 }

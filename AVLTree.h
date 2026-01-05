@@ -1,6 +1,7 @@
 #ifndef AVL_BOOKSYSTEM_AVLTREE_H
 #define AVL_BOOKSYSTEM_AVLTREE_H
 #include "AVLNode.h"
+#include<string>
 using namespace std;
 
 class AVLTree {
