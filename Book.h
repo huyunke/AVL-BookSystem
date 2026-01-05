@@ -11,7 +11,7 @@ class Book {
     string borrowerId;//借阅者id
     bool status;//表示图书是否可借
 public:
-    Book(string id, string name, string author,string borrowerId,bool status=true);
+    Book(string id, string name, string author,string borrowerId="-",bool status=true);
     ~Book();
     string getId()const;//获取图书id
     string getName()const;//获取图书名称

@@ -29,6 +29,6 @@ void Print::printAdminMenu() {
 void Print::printWelcome() {
     cout<<"================================"<<endl;
     cout<<"欢迎来到图书馆管理系统"<<endl;
-    cout<<"用户ID是您的学号，初始密码是123456"<<endl;
+    cout<<"用户id是您的学号，初始密码是123456"<<endl;
     cout<<"================================"<<endl;
 }

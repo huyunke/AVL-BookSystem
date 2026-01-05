@@ -66,9 +66,10 @@ void Book::printBookInfo(bool isAdmin) {
         cout<<"状态: 可借"<<endl;
     } else {
         cout<<"状态: 已借出"<<endl;
-    }
-    if (isAdmin) {
-        cout<<"借阅者id: "<<borrowerId<<endl;
+        //管理员可以查看借阅者id
+        if (isAdmin) {
+            cout<<"借阅者id: "<<borrowerId<<endl;
+        }
     }
 }
 

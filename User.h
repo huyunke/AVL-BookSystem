@@ -12,7 +12,7 @@ class User {
     string name;//用户名
     string password;//用户密码
     string type;//用户类型
-    vector<BookBorrowInfo> borrowInfo;//借阅图书的相关信息，可以借阅多本（设定归还时间/借阅数量限制）
+    vector<BookBorrowInfo> borrowInfo;//借阅图书的相关信息，可以借阅多本，设定归还时间
 public:
     User(string id,string name, string password,string type="reader");
     ~User();
@@ -27,7 +27,7 @@ public:
     void addBorrowInfoSilent(string bookId);//添加借阅信息（不显示消息，用于从文件读取）
     void addBorrowInfoWithTime(string bookId, time_t borrowTime, time_t returnTime);//添加借阅信息（带时间参数，用于从文件读取）
     bool removeBorrowInfo(string bookId);//移除借阅信息，归还成功返回true，失败返回false
-    bool updateBorrowBookId(string oldBookId, string newBookId);//更新借阅信息中的图书ID
+    bool updateBorrowBookId(string oldBookId, string newBookId);//更新借阅信息中的图书id
     void printBorrowInfo();//打印借阅信息
 };
 
