@@ -7,8 +7,10 @@ struct AVLNode {
     Book book;
     AVLNode* left;
     AVLNode* right;
+    int level;
+    int column;
     int height;
-    AVLNode(Book book):book(book),left(nullptr),right(nullptr),height(1){};
+    AVLNode(Book book):book(book),left(nullptr),right(nullptr),level(0),column(0),height(1){};
     void updateHeight();//更新高度
 };
 

@@ -26,6 +26,8 @@ class AVLTree {
     void updateHeight(AVLNode* node);//更新高度
     AVLNode* minValueNode(AVLNode* node);//找到最小值结点
     void printTree(AVLNode* node);
+    AVLNode* buildShadowTree(AVLNode* t, int level, int& column);//构建影子树
+    void clearShadowTree(AVLNode* shadowRoot);//清空影子树
 public:
     AVLTree():root(nullptr){};
     ~AVLTree();
@@ -34,6 +36,7 @@ public:
     AVLNode* search(const string& bookId) const;//查找结点
     void printTree();//中序遍历打印树，用于测试
     AVLNode* getRoot();//获取根节点
+    void printAVLTree();//打印AVL树
 };
 
 

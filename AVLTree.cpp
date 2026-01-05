@@ -1,6 +1,8 @@
 #include "AVLTree.h"
 #include "AVLNode.h"
-#include<iostream>
+#include <iostream>
+#include <queue>
+#include <vector>
 using namespace std;
 
 //获取平衡因子
@@ -110,7 +112,6 @@ AVLNode* AVLTree::insert(AVLNode* node,const Book &book) {
 //删除结点（需要检查）
 AVLNode* AVLTree::remove(AVLNode* node,const string &bookId) {
     if (!node) return nullptr; //节点不存在，返回nullptr
-
     if (node->book.getId()>bookId) {
         node->left=remove(node->left,bookId);
     } else if (node->book.getId()<bookId) {
@@ -135,11 +136,9 @@ AVLNode* AVLTree::remove(AVLNode* node,const string &bookId) {
             node->right=remove(node->right,temp->book.getId());
         }
     }
-
     if (!node) {
         return node;
     }
-
     updateHeight(node);
     int balance = getBalance(node);
 
@@ -219,6 +218,7 @@ void AVLTree::printTree() {
     printTree(root);
 }
 
+//中序遍历打印树，用于测试
 void AVLTree::printTree(AVLNode* node) {
     if (node==nullptr) {
         return;
@@ -228,6 +228,83 @@ void AVLTree::printTree(AVLNode* node) {
     printTree(node->right);
 }
 
+//获取根节点
 AVLNode* AVLTree::getRoot() {
     return root;
+}
+
+//构建影子树，用于打印树形结构
+AVLNode* AVLTree::buildShadowTree(AVLNode* t, int level, int& column) {
+    AVLNode* newNode = nullptr;
+    if (t != nullptr) {
+        newNode = new AVLNode(t->book);
+        AVLNode* newleft = buildShadowTree(t->left, level + 1, column);
+        newNode->left = newleft;
+        newNode->level = level;
+        newNode->column = column;
+        column++;
+        AVLNode* newright = buildShadowTree(t->right, level + 1, column);
+        newNode->right = newright;
+        newNode->height = t->height;
+    }
+    return newNode;
+}
+
+//清空影子树
+void AVLTree::clearShadowTree(AVLNode* shadowRoot) {
+    if (shadowRoot == nullptr) {
+        return;
+    }
+    clearShadowTree(shadowRoot->left);
+    clearShadowTree(shadowRoot->right);
+    delete shadowRoot;
+}
+
+//打印AVL树型结构
+void AVLTree::printAVLTree() {
+    cout<<"=================================="<<endl;
+    cout<<"AVL树形结构："<<endl;
+    cout<<"=================================="<<endl;
+    if (root == nullptr) {
+        cout<<"树为空"<<endl;
+        cout<<"=================================="<<endl;
+        return;
+    }
+    //构建影子树
+    int column = 0;
+    AVLNode* shadowRoot = buildShadowTree(root, 0, column);
+    //找出最大的列号，用于确定输出宽度
+    int maxColumn = column;
+    //找出最大的层级
+    int maxLevel = root->height - 1;
+    //创建二维数组存储每个位置的节点id
+    vector<vector<string>> grid(maxLevel + 1, vector<string>(maxColumn, "    "));
+    //填充数组（用队列进行层次遍历）
+    queue<AVLNode*> q;
+    q.push(shadowRoot);
+    while (!q.empty()) {
+        AVLNode* node = q.front();
+        q.pop();
+        if (node != nullptr) {
+            //将节点id放入对应的网格位置
+            grid[node->level][node->column] = node->book.getId();
+            if (node->left != nullptr) {
+                q.push(node->left);
+            }
+            if (node->right != nullptr) {
+                q.push(node->right);
+            }
+        }
+    }
+    //打印数组
+    for (int i = 0; i <= maxLevel; i++) {
+        cout<<"第"<<(i+1)<<"层: ";
+        for (int j = 0; j < maxColumn; j++) {
+            cout<<grid[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+    //清空影子树
+    clearShadowTree(shadowRoot);
+    cout<<"=================================="<<endl;
 }
