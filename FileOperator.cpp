@@ -36,8 +36,8 @@ bool FileOperator::readBookFile(string bookFilename,AVLTree* tree) {
         } else {
             bookStatus=true;
         }
-        Book* book =new Book(id,name,author,borrowerId,bookStatus);
-        tree->insert(*book);
+        Book book =Book(id,name,author,borrowerId,bookStatus);
+        tree->insert(book);
     }
     return true;
 }

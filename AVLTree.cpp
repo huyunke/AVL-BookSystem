@@ -37,25 +37,6 @@ AVLNode* AVLTree::rightRotate(AVLNode *node) {
     return left;
 }
 
-//四种调整方式
-AVLNode* AVLTree::LL(AVLNode *node) {
-    return rightRotate(node);
-}
-
-AVLNode* AVLTree::RR(AVLNode *node) {
-    return leftRotate(node);
-}
-
-AVLNode* AVLTree::LR(AVLNode *node) {
-    node->left=leftRotate(node->left);
-    return rightRotate(node);
-}
-
-AVLNode* AVLTree::RL(AVLNode *node) {
-    node->right=rightRotate(node->right);
-    return leftRotate(node);
-}
-
 //清空树
 void AVLTree::clear(AVLNode *node) {
     if (node==nullptr) {
@@ -80,7 +61,7 @@ bool AVLTree::isBalanced(AVLNode *node) {
     return isBalanced(node->left)&&isBalanced(node->right);
 }
 
-//插入结点（需要检查）
+//插入结点
 AVLNode* AVLTree::insert(AVLNode* node,const Book &book) {
     if (!node)return new AVLNode(book);
 
@@ -92,16 +73,20 @@ AVLNode* AVLTree::insert(AVLNode* node,const Book &book) {
     updateHeight(node);
 
     int balance = getBalance(node);
+    //左左情况
     if (balance>1&&book<node->left->book) {
         return rightRotate(node);
     }
+    //右右情况
     if (balance<-1&&book>node->right->book) {
         return leftRotate(node);
     }
+    //左右情况
     if (balance>1&&book>node->left->book) {
         node->left=leftRotate(node->left);
         return rightRotate(node);
     }
+    //右左情况
     if (balance<-1&&book<node->right->book) {
         node->right=rightRotate(node->right);
         return leftRotate(node);
@@ -109,7 +94,7 @@ AVLNode* AVLTree::insert(AVLNode* node,const Book &book) {
     return node;
 }
 
-//删除结点（需要检查）
+//删除结点
 AVLNode* AVLTree::remove(AVLNode* node,const string &bookId) {
     if (!node) return nullptr; //节点不存在，返回nullptr
     if (node->book.getId()>bookId) {
@@ -286,7 +271,7 @@ void AVLTree::printAVLTree() {
         AVLNode* node = q.front();
         q.pop();
         if (node != nullptr) {
-            //将节点id放入对应的网格位置
+            //将节点id放入对应的位置
             grid[node->level][node->column] = node->book.getId();
             if (node->left != nullptr) {
                 q.push(node->left);

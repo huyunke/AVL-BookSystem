@@ -1,3 +1,13 @@
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#endif
+
 #include <iostream>
 #include <fstream>
 #include "Print.h"
@@ -6,13 +16,6 @@
 #include "BookBorrowInfo.h"
 #include "User.h"
 #include "FileOperator.h"
-#ifdef _WIN32
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#undef max
-#undef min
-#endif
 using namespace std;
 
 int main() {
@@ -320,6 +323,7 @@ int main() {
                             Book newBook(newBookId, oldName, oldAuthor, borrowerId, bookStatus);
                             tree->printAVLTree();
                             tree->remove(oldBookId);
+                            tree->printAVLTree();
                             tree->insert(newBook);
                             tree->printAVLTree();
 

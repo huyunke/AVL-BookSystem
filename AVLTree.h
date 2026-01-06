@@ -12,12 +12,6 @@ class AVLTree {
     AVLNode* leftRotate(AVLNode* node);//左旋
     AVLNode* rightRotate(AVLNode* node);//右旋
 
-    //四种调整方式
-    AVLNode* LL(AVLNode* node);
-    AVLNode* RR(AVLNode* node);
-    AVLNode* LR(AVLNode* node);
-    AVLNode* RL(AVLNode* node);
-
     void clear(AVLNode *node);//清空树
 
     bool isBalanced(AVLNode* node);//检查平衡树是否平衡
