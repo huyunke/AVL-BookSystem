@@ -213,6 +213,28 @@ void AVLTree::printTree(AVLNode* node) {
     printTree(node->right);
 }
 
+//打印所有图书信息（中序遍历）
+void AVLTree::printAllBooks(AVLNode* node, bool isAdmin) {
+    if (node==nullptr) {
+        return;
+    }
+    printAllBooks(node->left, isAdmin);
+    cout<<"=================================="<<endl;
+    node->book.printBookInfo(isAdmin);
+    cout<<"=================================="<<endl;
+    printAllBooks(node->right, isAdmin);
+}
+
+//打印所有图书信息
+void AVLTree::printAllBooks(bool isAdmin) {
+    if (root==nullptr) {
+        cout<<"暂无图书信息"<<endl;
+        return;
+    }
+    cout<<"所有图书信息如下："<<endl;
+    printAllBooks(root, isAdmin);
+}
+
 //获取根节点
 AVLNode* AVLTree::getRoot() {
     return root;

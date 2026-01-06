@@ -83,24 +83,9 @@ int main() {
         while (choice!=6) {
             switch (choice) {
                 //查询图书
-                //根据id查找到书本，并输出书本信息（包括是否被借阅）
+                //输出所有图书信息
                 case 1: {
-                    cout<<"请输入要查询的图书id：";
-                    string bookId;
-                    while (cin>>bookId) {
-                        if (bookId=="0") break;
-                        AVLNode* targetNode=tree->search(bookId);
-                        if (!targetNode) {
-                            cout<<"图书不存在"<<endl;
-                            cout<<"请检查书本id是否正确"<<endl;
-                            cout<<"请输入要查询的图书id：";
-                            continue;
-                        }
-                        cout<<"=================================="<<endl;
-                        targetNode->book.printBookInfo(false);
-                        cout<<"=================================="<<endl;
-                        cout<<"请输入要查询的图书id：";
-                    }
+                    tree->printAllBooks(false);
                     break;
                 }
 
@@ -344,20 +329,7 @@ int main() {
 
                 //查询图书
                 case 4: {
-                    cout<<"请输入要查询的图书id：";
-                    string bookId;
-                    while (cin>>bookId) {
-                        if (bookId=="0") break;
-                        AVLNode* targetNode=tree->search(bookId);
-                        if (!targetNode) {
-                            cout<<"图书不存在"<<endl;
-                            cout<<"请检查书本id是否正确"<<endl;
-                            cout<<"请输入要查询的图书id：";
-                            continue;
-                        }
-                        targetNode->book.printBookInfo(true);
-                        cout<<"请输入要查询的图书id：";
-                    }
+                    tree->printAllBooks(true);
                     break;
                 }
                 default: {
