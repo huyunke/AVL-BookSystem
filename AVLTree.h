@@ -20,6 +20,7 @@ class AVLTree {
     AVLNode* remove(AVLNode* node,const string& bookId);//删除节点
     void updateHeight(AVLNode* node);//更新高度
     AVLNode* minValueNode(AVLNode* node);//找到最小值结点
+    AVLNode* maxValueNode(AVLNode* node);//找到最大值结点
     void printTree(AVLNode* node);
     void printAllBooks(AVLNode* node, bool isAdmin);//打印所有图书信息
     AVLNode* buildShadowTree(AVLNode* t, int level, int& column);//构建影子树

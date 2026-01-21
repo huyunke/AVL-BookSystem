@@ -116,9 +116,16 @@ AVLNode* AVLTree::remove(AVLNode* node,const string &bookId) {
             delete temp;
         } else {
             //有两个子节点
-            AVLNode* temp= minValueNode(node->right);
-            node->book=temp->book;
-            node->right=remove(node->right,temp->book.getId());
+            if (node->left->height>node->right->height) {
+                AVLNode* temp= maxValueNode(node->left);
+                node->book=temp->book;
+                node->left=remove(node->left,temp->book.getId());
+            }
+            else {
+                AVLNode* temp= minValueNode(node->right);
+                node->book=temp->book;
+                node->right=remove(node->right,temp->book.getId());
+            }
         }
     }
     if (!node) {
@@ -163,6 +170,15 @@ AVLNode* AVLTree::minValueNode(AVLNode* node) {
     AVLNode* current = node;
     while (current && current->left) {
         current = current->left;
+    }
+    return current;
+}
+
+//找到最大值结点
+AVLNode* AVLTree::maxValueNode(AVLNode* node) {
+    AVLNode* current = node;
+    while (current && current->right) {
+        current = current->right;
     }
     return current;
 }
