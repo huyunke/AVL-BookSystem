@@ -85,7 +85,43 @@ int main() {
                 //查询图书
                 //输出所有图书信息
                 case 1: {
-                    tree->printAllBooks(false);
+                    cout<<"请选择查询类型"<<endl;
+                    int queryType;
+                    cout<<"1. 查询所有图书"<<endl;
+                    cout<<"2. 查询单本图书"<<endl;
+                    cout<<"0. 返回"<<endl;
+                    cout<<"请输入您的选择：";
+                    while (cin>>queryType) {
+                        if (queryType==1) tree->printAllBooks(false);
+                        else if (queryType==2) {
+                            cout<<"请输入要查询的图书id：";
+                            string bookId;
+                            while (cin>>bookId) {
+                                if (bookId=="0") break;
+                                AVLNode* targetNode=tree->search(bookId);
+                                if (!targetNode) {
+                                    cout<<"图书不存在"<<endl;
+                                    cout<<"请输入要查询的图书id：";
+                                    continue;
+                                }
+                                cout<<"=================================="<<endl;
+                                targetNode->book.printBookInfo(false);
+                                cout<<"=================================="<<endl;
+                                cout<<"请输入要查询的图书id：";
+                            }
+                        }
+                        else if (queryType==0) {
+                            break;
+                        }
+                        else {
+                            cout<<"指令无效请重新输入"<<endl;
+                        }
+                        cout<<"请选择查询类型"<<endl;
+                        cout<<"1. 查询所有图书"<<endl;
+                        cout<<"2. 查询单本图书"<<endl;
+                        cout<<"0. 返回"<<endl;
+                        cout<<"请输入您的选择：";
+                    }
                     break;
                 }
 
@@ -151,6 +187,9 @@ int main() {
                     cout<<"请输入旧密码：";
                     string oldPassword;
                     cin>>oldPassword;
+                    if (oldPassword=="0") {
+                        break;
+                    }
                     while (oldPassword!=user->getPassword()) {
                         cout<<"密码错误"<<endl;
                         cout<<"请重新输入旧密码：";
@@ -290,7 +329,7 @@ int main() {
                             AVLNode* checkNode = tree->search(newBookId);
                             if (checkNode) {
                                 cout<<"图书id已存在"<<endl;
-                                cout<<"请重新输入要修改的图书id：";
+                                cout<<"请重新输入新的图书id：";
                                 continue;
                             }
                             //新id有效
@@ -329,7 +368,43 @@ int main() {
 
                 //查询图书
                 case 4: {
-                    tree->printAllBooks(true);
+                    cout<<"请选择查询类型"<<endl;
+                    int queryType;
+                    cout<<"1. 查询所有图书"<<endl;
+                    cout<<"2. 查询单本图书"<<endl;
+                    cout<<"0. 返回"<<endl;
+                    cout<<"请输入您的选择：";
+                    while (cin>>queryType) {
+                        if (queryType==1) tree->printAllBooks(true);
+                        else if (queryType==2) {
+                            cout<<"请输入要查询的图书id：";
+                            string bookId;
+                            while (cin>>bookId) {
+                                if (bookId=="0") break;
+                                AVLNode* targetNode=tree->search(bookId);
+                                if (!targetNode) {
+                                    cout<<"图书不存在"<<endl;
+                                    cout<<"请输入要查询的图书id：";
+                                    continue;
+                                }
+                                cout<<"=================================="<<endl;
+                                targetNode->book.printBookInfo(true);
+                                cout<<"=================================="<<endl;
+                                cout<<"请输入要查询的图书id：";
+                            }
+                        }
+                        else if (queryType==0) {
+                            break;
+                        }
+                        else {
+                            cout<<"指令无效请重新输入"<<endl;
+                        }
+                        cout<<"请选择查询类型"<<endl;
+                        cout<<"1. 查询所有图书"<<endl;
+                        cout<<"2. 查询单本图书"<<endl;
+                        cout<<"0. 返回"<<endl;
+                        cout<<"请输入您的选择：";
+                    }
                     break;
                 }
                 //修改密码
@@ -337,6 +412,9 @@ int main() {
                     cout<<"请输入旧密码：";
                     string oldPassword;
                     cin>>oldPassword;
+                    if (oldPassword=="0") {
+                        break;
+                    }
                     while (oldPassword!=user->getPassword()) {
                         cout<<"密码错误"<<endl;
                         cout<<"请重新输入旧密码：";
