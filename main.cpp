@@ -177,7 +177,7 @@ int main() {
         int choice;
         cin>>choice;
         cout<<"=================================="<<endl;
-        while (choice!=5) {
+        while (choice!=6) {
             switch (choice) {
                 //添加图书
                 case 1: {
@@ -330,6 +330,22 @@ int main() {
                 //查询图书
                 case 4: {
                     tree->printAllBooks(true);
+                    break;
+                }
+                //修改密码
+                case 5: {
+                    cout<<"请输入旧密码：";
+                    string oldPassword;
+                    cin>>oldPassword;
+                    while (oldPassword!=user->getPassword()) {
+                        cout<<"密码错误"<<endl;
+                        cout<<"请重新输入旧密码：";
+                        cin>>oldPassword;
+                    }
+                    cout<<"请输入新密码：";
+                    string newPassword;
+                    cin>>newPassword;
+                    user->setPassword(newPassword);
                     break;
                 }
                 default: {

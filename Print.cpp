@@ -21,7 +21,8 @@ void Print::printAdminMenu() {
     cout<<"2. 删除图书"<<endl;
     cout<<"3. 修改图书"<<endl;
     cout<<"4. 查询图书"<<endl;
-    cout<<"5. 退出"<<endl;
+    cout<<"5. 修改密码"<<endl;
+    cout<<"6. 退出"<<endl;
     cout<<"请输入你的选择：";
 }
 
