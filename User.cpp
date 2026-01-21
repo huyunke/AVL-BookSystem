@@ -66,12 +66,6 @@ void User::addBorrowInfo(string bookId) {
     cout<<"=================================="<<endl;
 }
 
-//添加借阅信息(不输出提示信息)
-void User::addBorrowInfoSilent(string bookId) {
-    BookBorrowInfo info(bookId);
-    borrowInfo.push_back(info);
-}
-
 //添加借阅信息（带时间参数，用于从文件读取）
 void User::addBorrowInfoWithTime(string bookId, time_t borrowTime, time_t returnTime) {
     BookBorrowInfo info(bookId, borrowTime, returnTime);

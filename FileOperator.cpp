@@ -67,7 +67,7 @@ void FileOperator::writeBookFile(ofstream& file,AVLNode* node) {
     writeBookFile(file,node->right);
 }
 
-//从文件中读取用户信息（需要检查）
+//从文件中读取用户信息
 bool FileOperator::readUserFile(string userFilename,unordered_map<string,User*>& userMap) {
     ifstream userFile(userFilename);
     if (!userFile) {
