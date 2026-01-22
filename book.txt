@@ -1,10 +1,10 @@
 B003 CodeComplete1 SteveMcConnell U001 0
 B002 IntroductionToAlgorithms Cormen - 1
 B001 ComputerGraphics1 Foley - 1
-B007 OperatingSystems Silberschatz U002 0
+B012 CodeComplete SteveMcConnell - 1
 B005 WebDevelopment1 Freeman1 - 1
 B004 ComputerArchitecture Patterson - 1
 B006 ComputerNetworks Tanenbaum - 1
-B013 TheCProgrammingLanguage Kernighan U003 0
-B009 ArtificialIntelligence Russell - 1
-B014 WebDevelopment Freeman - 1
+B014 ArtificialIntelligence R - 1
+B013 TCPL Kernighan U003 0
+B015 OperatingSystems Silberschatz U002 0
