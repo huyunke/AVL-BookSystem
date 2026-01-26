@@ -4,8 +4,8 @@ project(AVL_BookSystem)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(AVL_BookSystem main.cpp
-        Book.cpp
-        Book.h
+        Book/Book.cpp
+        Book/Book.h
         User.cpp
         User.h
         AVLNode.cpp
@@ -18,4 +18,14 @@ add_executable(AVL_BookSystem main.cpp
         FileOperator.h
         BookBorrowInfo.cpp
         BookBorrowInfo.h
+        database/DatabaseOperator.cpp
+        database/DatabaseOperator.h
+        database/dao/BookDAO.cpp
+        database/dao/BookDAO.h
+        database/dao/UserDAO.cpp
+        database/dao/UserDAO.h
+        Book/BookCopy.cpp
+        Book/BookCopy.h
+        database/dao/BookCopyDAO.cpp
+        database/dao/BookCopyDAO.h
 )

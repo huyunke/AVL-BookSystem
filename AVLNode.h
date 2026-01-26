@@ -1,6 +1,6 @@
 #ifndef AVL_BOOKSYSTEM_AVLNODE_H
 #define AVL_BOOKSYSTEM_AVLNODE_H
-#include "Book.h"
+#include "Book/Book.h"
 using namespace std;
 
 struct AVLNode {
