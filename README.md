@@ -171,6 +171,11 @@ CREATE TABLE book_copy (
 - [ ] **基于新书 / 时间因素的推荐**
 - [ ] **混合推荐**
 
+### 其他表
+- [ ] Fine（罚款表）
+- [ ] Reservation（预约表）
+- [ ] AdminLog（管理员操作日志）
+
 ---
 
 - [ ] 从SQLite迁移到MySQL
