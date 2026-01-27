@@ -3,11 +3,13 @@
 #include "BookBorrowInfo.h"
 #include <iostream>
 #include "AVLTree.h"
+#include "utils/PasswordUtils.h"
 using namespace std;
 
 User::User(string id,string name, string password,string type) {
     this->id = id;
     this->name = name;
+    password=PasswordUtils::encryptPassword(password);
     this->password = password;
     this->type = type;
 }
@@ -15,32 +17,32 @@ User::User(string id,string name, string password,string type) {
 User::~User() {}
 
 //获取用户id
-string User::getId() {
+const string User::getId() const{
     return id;
 }
 
 //获取用户名
-string User::getName() {
+const string User::getName() const{
     return name;
 }
 
 //获取用户密码
-string User::getPassword() {
+const string User::getPassword() const{
     return password;
 }
 
 //获取用户类型
-string User::getType() {
+const string User::getType() const{
     return type;
 }
 
 //获取借阅图书信息
-vector<BookBorrowInfo> User::getBorrowBookInfo() {
+vector<BookBorrowInfo> User::getBorrowBookInfo() const{
     return borrowInfo;
 }
 
 //获取借阅图书数据（包含时间信息）
-string User::getBorrowBookDataWithTime() {
+const string User::getBorrowBookDataWithTime() {
     string borrowBookData;
     for (auto it = borrowInfo.begin(); it != borrowInfo.end(); ++it) {
         borrowBookData += " " + it->getBookId() + ":" +
@@ -50,8 +52,17 @@ string User::getBorrowBookDataWithTime() {
     return borrowBookData;
 }
 
+void User::setId(string id) {
+    this->id = id;
+}
+
+void User::setName(string name) {
+    this->name = name;
+}
+
 //设置用户密码
 void User::setPassword(string password) {
+    password=PasswordUtils::encryptPassword(password);
     this->password = password;
 }
 
