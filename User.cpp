@@ -52,6 +52,10 @@ const string User::getBorrowBookDataWithTime() {
     return borrowBookData;
 }
 
+int User::getBorrowedBookCount() const{
+    return borrowedBookCount;
+}
+
 void User::setId(string id) {
     this->id = id;
 }
@@ -64,6 +68,10 @@ void User::setName(string name) {
 void User::setPassword(string password) {
     password=PasswordUtils::encryptPassword(password);
     this->password = password;
+}
+
+void User::setBorrowedBookCount(int borrowedBookCount) {
+    this->borrowedBookCount = borrowedBookCount;
 }
 
 //添加借阅信息
