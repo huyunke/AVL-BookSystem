@@ -31,117 +31,13 @@
 
 ---
 
-## 📘 核心领域模型设计
-
-### 1️⃣ Book（书目 / 书的抽象概念）
-
-表示“**一种书**”，而不是具体可借阅的实体。
-
-**典型字段：**
-
-* `id`：书目唯一标识
-* `title`：书名
-* `author`：作者
-* `category`：分类
-* `publisher`：出版社
-
-> 📌 Book 本身 **不可直接借阅**，仅用于描述书籍信息。
-
----
-
-### 2️⃣ BookCopy（实体书 / 可借阅对象）
-
-表示“**某一本具体的书**”，图书馆中真正可以被借走的单位。
-
-**典型字段：**
-
-* `copy_id`：实体书唯一编号（条码）
-* `book_id`：所属 Book
-* `status`：`available` / `borrowed`
-
-> 📌 图书馆的借阅行为，**一定是基于 BookCopy，而不是 Book**。
-
-
----
-
-## 🗃️ 数据库设计（目前设计后续可能会更改）
-
-### 📄 book 表（书目表）
-
-```sql
-CREATE TABLE book (
-    id TEXT PRIMARY KEY,
-    title TEXT NOT NULL,
-    author TEXT NOT NULL,
-    category TEXT,
-    publisher TEXT
-);
-```
-
-### 📄 book_copy 表（实体书表）
-
-```sql
-CREATE TABLE book_copy (
-    copy_id TEXT PRIMARY KEY,
-    book_id TEXT NOT NULL,
-    status TEXT NOT NULL, -- available / borrowed
-);
-```
-
----
-
-## 📦 DAO 设计说明
-
-### 📘 BookDAO（书目数据访问）
-
-**职责：**
-
-* 维护书目信息（增 / 删 / 改 / 查）
-* 按分类、书名等方式检索书目
-
-**不负责：**
-
-* 借书 / 还书
-* 库存状态
-
----
-
-### 📕 BookCopyDAO（实体书数据访问）
-
-**职责：**
-
-* 管理实体书的增删
-* 查询某书目的所有副本
-* 查询当前可借副本
-
-**负责“借阅”的数据基础，但不包含业务规则**。
-
----
-
-## 🔧 DatabaseOperator 设计
-
-`DatabaseOperator` 对 SQLite3 的 C API 进行统一封装，提供：
-
-* 数据库打开 / 关闭
-* SQL 执行（execute）
-* 预编译语句（prepare）
-* 查询封装
-* 事务控制（BEGIN / COMMIT / ROLLBACK）
-
-**目的：**
-
-* 避免 DAO 层直接操作 sqlite3 API
-* 方便后续切换数据库（如 MySQL）
-
----
-
 ### 🚀 后续计划--功能扩展规划TODO
 #### 当前阶段目标
 1. [x] 设计数据库表结构
 2. [x] 集成SQLite3库
-3. [ ] 实现DatabaseManager和BookDAO、UserDAO(未实现)
+3. [x] 实现DatabaseManager和BookDAO、UserDAO,RecordDAO
 4. [ ] 数据迁移工具（txt → SQLite）
-5. [ ] 密码加密
+5. [x] 密码加密
 6. [x] 代码重构（FileOperator → DatabaseOperator）
 7. [x] 添加BookCopy类来封装实体书
 8. [ ] 重构其他相关代码
