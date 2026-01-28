@@ -7,7 +7,7 @@ user_id        PK
 name
 role           (student / admin)
 password
-max_borrow     (可选)
+max_borrow
 */
 
 UserDAO::UserDAO(DatabaseOperator* userDatabase):userDatabase(userDatabase){}
@@ -16,8 +16,8 @@ UserDAO::~UserDAO() {}
 
 bool UserDAO::addUser(const User& user) {
     const string sql =
-        "INSERT INTO user (user_id, name, role, password) "
-        "VALUES (?, ?, ?, ?);";
+        "INSERT INTO user (user_id, name, role, password, borrow_count) "
+        "VALUES (?, ?, ?, ?, ?);";
 
     sqlite3_stmt* stmt = nullptr;
     if (!userDatabase->prepare(sql, &stmt)) return false;
@@ -26,6 +26,7 @@ bool UserDAO::addUser(const User& user) {
     sqlite3_bind_text(stmt, 2, user.getName().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 3, user.getType().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 4, user.getPassword().c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, 5, 0);
 
     bool success = (sqlite3_step(stmt) == SQLITE_DONE);
     sqlite3_finalize(stmt);
@@ -37,7 +38,9 @@ bool UserDAO::deleteUser(const string& userId) {
     sqlite3_stmt* stmt = nullptr;
 
     if (!userDatabase->prepare(sql, &stmt)) return false;
+
     sqlite3_bind_text(stmt, 1, userId.c_str(), -1, SQLITE_TRANSIENT);
+
     bool success = (sqlite3_step(stmt) == SQLITE_DONE);
     sqlite3_finalize(stmt);
     return success;
@@ -48,21 +51,36 @@ bool UserDAO::updateUserPassword(const string& userId, const string& newPassword
     sqlite3_stmt* stmt = nullptr;
 
     if (!userDatabase->prepare(sql, &stmt)) return false;
+
     sqlite3_bind_text(stmt, 1, newPassword.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 2, userId.c_str(), -1, SQLITE_TRANSIENT);
+
     bool success = (sqlite3_step(stmt) == SQLITE_DONE);
     sqlite3_finalize(stmt);
     return success;
 }
 
-bool UserDAO::updateUserInfo(const User& user) {
-    const string sql = "UPDATE user SET name = ?, role = ? WHERE user_id = ?;";
+bool UserDAO::updateUserBorrowInfo(const string& userId,bool flag) {
+    //flag为true时，借阅数量加1，否则减1
+    if (flag) {
+        const string sql = "UPDATE user SET borrow_count = borrow_count + 1 WHERE user_id = ?;";
+        sqlite3_stmt* stmt = nullptr;
+
+        if (!userDatabase->prepare(sql, &stmt)) return false;
+
+        sqlite3_bind_text(stmt, 1, userId.c_str(), -1, SQLITE_TRANSIENT);
+
+        bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+        sqlite3_finalize(stmt);
+        return success;
+    }
+    const string sql = "UPDATE user SET borrow_count = borrow_count - 1 WHERE user_id = ?;";
     sqlite3_stmt* stmt = nullptr;
 
     if (!userDatabase->prepare(sql, &stmt)) return false;
-    sqlite3_bind_text(stmt, 1, user.getName().c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, user.getType().c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 3, user.getId().c_str(), -1, SQLITE_TRANSIENT);
+
+    sqlite3_bind_text(stmt, 1, userId.c_str(), -1, SQLITE_TRANSIENT);
+
     bool success = (sqlite3_step(stmt) == SQLITE_DONE);
     sqlite3_finalize(stmt);
     return success;
@@ -78,6 +96,7 @@ bool UserDAO::searchUserById(const string& userId, User& user) {
     sqlite3_stmt* stmt = nullptr;
 
     if (!userDatabase->prepare(sql, &stmt)) return false;
+
     sqlite3_bind_text(stmt, 1, userId.c_str(), -1, SQLITE_TRANSIENT);
 
     if (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -96,6 +115,7 @@ bool UserDAO::exists(const string& userId) {
     sqlite3_stmt* stmt = nullptr;
 
     if (!userDatabase->prepare(sql, &stmt)) return false;
+
     sqlite3_bind_text(stmt, 1, userId.c_str(), -1, SQLITE_TRANSIENT);
 
     int count = 0;
@@ -111,6 +131,7 @@ bool UserDAO::verifyUser(const string& userId, const string& password) {
     sqlite3_stmt* stmt = nullptr;
 
     if (!userDatabase->prepare(sql, &stmt)) return false;
+
     sqlite3_bind_text(stmt, 1, userId.c_str(), -1, SQLITE_TRANSIENT);
 
     if (sqlite3_step(stmt) == SQLITE_ROW) {

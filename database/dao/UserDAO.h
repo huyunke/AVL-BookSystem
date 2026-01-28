@@ -13,7 +13,8 @@ public:
     bool deleteUser(const string& userId);//删除用户
 
     bool updateUserPassword(const string& userId, const string& newPassword);//更新用户密码
-    bool updateUserInfo(const User& user);//更新用户信息
+    bool updateUserBorrowInfo(const string& userId,bool flag);//更新用户借阅信息
+    bool updateUserName(const string& userId, const string& newName);
 
     bool searchUserById(const string& userId, User& user);//根据用户id查询用户信息
 
