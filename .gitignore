@@ -1,0 +1,36 @@
+# 自定义忽略
+sqlite3.h
+TO.md
+推荐模块.md
+
+# Crypto++库（第三方库）
+cryptopp/
+
+# 可执行文件
+*.exe
+*.out
+*.app
+
+# 编译产物
+cmake-build-*/
+build/
+*.o
+*.obj
+
+# IDE配置文件
+.idea/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# 临时文件
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# 数据文件（可选，如果不想提交数据）
+# book.txt
+# user.txt

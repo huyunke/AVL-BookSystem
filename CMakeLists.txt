@@ -30,6 +30,10 @@ add_executable(AVL_BookSystem main.cpp
         database/dao/BookCopyDAO.h
         utils/PasswordUtils.cpp
         utils/PasswordUtils.h
+        database/dao/RecordDAO.cpp
+        database/dao/RecordDAO.h
+        Record.cpp
+        Record.h
 )
 
 # 链接Crypto++库到主程序
