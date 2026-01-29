@@ -11,9 +11,10 @@ password
 
 UserDAO::UserDAO(DatabaseOperator* userDatabase):userDatabase(userDatabase){}
 
-UserDAO::~UserDAO() {}
+UserDAO::~UserDAO()=default;
 
-bool UserDAO::addUser(const User& user) {
+//添加用户
+bool UserDAO::addUser(const User& user) const {
     const string sql =
         "INSERT INTO user (user_id, name, role, password, borrow_count) "
         "VALUES (?, ?, ?, ?, ?);";
@@ -32,7 +33,8 @@ bool UserDAO::addUser(const User& user) {
     return success;
 }
 
-bool UserDAO::deleteUser(const string& userId) {
+//删除用户
+bool UserDAO::deleteUser(const string& userId) const {
     const string sql = "DELETE FROM user WHERE user_id = ?;";
     sqlite3_stmt* stmt = nullptr;
 
@@ -45,7 +47,8 @@ bool UserDAO::deleteUser(const string& userId) {
     return success;
 }
 
-bool UserDAO::updateUserPassword(const string& userId, const string& newPassword) {
+//更新用户密码
+bool UserDAO::updateUserPassword(const string& userId, const string& newPassword) const {
     const string sql = "UPDATE user SET password = ? WHERE user_id = ?;";
     sqlite3_stmt* stmt = nullptr;
 
@@ -59,7 +62,8 @@ bool UserDAO::updateUserPassword(const string& userId, const string& newPassword
     return success;
 }
 
-bool UserDAO::updateUserBorrowInfo(const string& userId,bool flag) {
+//更新用户借阅信息
+bool UserDAO::updateUserBorrowInfo(const string& userId, const bool flag) const {
     //flag为true时，借阅数量加1，否则减1
     if (flag) {
         const string sql = "UPDATE user SET borrow_count = borrow_count + 1 WHERE user_id = ?;";
@@ -85,12 +89,29 @@ bool UserDAO::updateUserBorrowInfo(const string& userId,bool flag) {
     return success;
 }
 
+//更新用户名
+bool UserDAO::updateUserName(const string& userId, const string& newName) const {
+    const string sql = "UPDATE user SET name = ? WHERE user_id = ?;";
+    sqlite3_stmt* stmt = nullptr;
+
+    if (!userDatabase->prepare(sql, &stmt)) return false;
+
+    sqlite3_bind_text(stmt, 1, newName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, userId.c_str(), -1, SQLITE_TRANSIENT);
+
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+    sqlite3_finalize(stmt);
+    return success;
+}
+
+//用于获取列文本
 static string columnText(sqlite3_stmt* stmt, int col) {
     const unsigned char* text = sqlite3_column_text(stmt, col);
     return text ? reinterpret_cast<const char*>(text) : "";
 }
 
-bool UserDAO::searchUserById(const string& userId, User& user) {
+//根据用户id查询用户信息
+bool UserDAO::searchUserById(const string& userId, User& user) const {
     const string sql = "SELECT user_id, name, role, password FROM user WHERE user_id = ?;";
     sqlite3_stmt* stmt = nullptr;
 
@@ -109,7 +130,8 @@ bool UserDAO::searchUserById(const string& userId, User& user) {
     return false;
 }
 
-bool UserDAO::exists(const string& userId) {
+//判断用户是否存在，用于登录和注册校验
+bool UserDAO::exists(const string& userId) const {
     const string sql = "SELECT COUNT(*) FROM user WHERE user_id = ?;";
     sqlite3_stmt* stmt = nullptr;
 
@@ -125,7 +147,8 @@ bool UserDAO::exists(const string& userId) {
     return count > 0;
 }
 
-bool UserDAO::verifyUser(const string& userId, const string& password) {
+//验证用户密码
+bool UserDAO::verifyUser(const string& userId, const string& password) const {
     const string sql = "SELECT password FROM user WHERE user_id = ?;";
     sqlite3_stmt* stmt = nullptr;
 

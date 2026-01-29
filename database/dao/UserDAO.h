@@ -9,17 +9,19 @@ class UserDAO {
 public:
     explicit UserDAO(DatabaseOperator* userDatabase);
     ~UserDAO();
-    bool addUser(const User& user);//添加用户
-    bool deleteUser(const string& userId);//删除用户
 
-    bool updateUserPassword(const string& userId, const string& newPassword);//更新用户密码
-    bool updateUserBorrowInfo(const string& userId,bool flag);//更新用户借阅信息
-    bool updateUserName(const string& userId, const string& newName);
+    //核心操作
+    [[nodiscard]] bool addUser(const User& user) const;//添加用户
+    [[nodiscard]] bool deleteUser(const string& userId) const;//删除用户
 
-    bool searchUserById(const string& userId, User& user);//根据用户id查询用户信息
+    [[nodiscard]] bool updateUserPassword(const string& userId, const string& newPassword) const;//更新用户密码
+    [[nodiscard]] bool updateUserBorrowInfo(const string& userId,bool flag) const;//更新用户借阅信息
+    [[nodiscard]] bool updateUserName(const string& userId, const string& newName) const;//更新用户名
 
-    bool exists(const string& userId);//判断用户是否存在，用于登录和注册校验
-    bool verifyUser(const string& userId, const string& password);//验证用户登录
+    bool searchUserById(const string& userId, User& user) const;//根据用户id查询用户信息
+
+    [[nodiscard]] bool exists(const string& userId) const;//判断用户是否存在，用于登录和注册校验
+    [[nodiscard]] bool verifyUser(const string& userId, const string& password) const;//验证用户登录
 
     //vector<User> getAllUsers();//获取所有用户信息，用于管理员查询所有用户
 };

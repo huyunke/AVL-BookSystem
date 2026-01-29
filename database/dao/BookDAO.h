@@ -21,13 +21,19 @@ public:
     explicit BookDAO(DatabaseOperator* bookDatabase);
     ~BookDAO();
 
-    bool addBook(const Book& book);
-    bool deleteBook(const string& bookId);
-    bool updateBook(const Book& book);
+    //核心操作
+    [[nodiscard]] bool addBook(const Book& book) const;//添加图书
+    [[nodiscard]] bool deleteBook(const string& bookId) const;//删除图书
+    [[nodiscard]] bool updateBook(const Book& book) const;//更新图书
 
-    bool searchBookById(const string& bookId, Book& book);
-    bool searchBookByName(const string& bookName, Book& book);
-    vector<Book> searchBooksByCategory(const string& category);
+    //查询操作
+    bool searchBookById(const string& bookId, Book& book) const;//根据图书id查询图书信息
+    bool searchBookByTitle(const string& bookTitle, Book& book) const;//根据图书名称查询图书信息
+    [[nodiscard]] vector<Book> searchBooksByCategory(const string& category) const;//根据图书分类查询图书信息
+    [[nodiscard]] vector<Book> searchBookByAuthor(const string& author) const;
+
+    //业务校验
+    bool isBookIdExist(const string& bookId) const;//用于判断图书id是否已存在
 };
 
 

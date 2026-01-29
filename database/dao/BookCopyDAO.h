@@ -11,11 +11,17 @@ public:
     explicit BookCopyDAO(DatabaseOperator* bookDatabase);
     ~BookCopyDAO();
 
-    bool addBookCopy(const BookCopy& bookCopy);
-    bool deleteBookCopy(const string& copyId);
+    //核心操作
+    [[nodiscard]] bool addBookCopy(const BookCopy& bookCopy) const;//添加图书副本
+    [[nodiscard]] bool deleteBookCopy(const string& copyId) const;//删除图书副本
+    [[nodiscard]] bool updateBookCopyStatus(const string& copyId, const string& status) const;//更新图书副本状态
 
-    std::vector<BookCopy> getCopiesByBookId(const string& bookId);
-    std::vector<BookCopy> getAvailableCopies(const string& bookId);
+    //查询操作
+    [[nodiscard]] vector<BookCopy> getCopiesByBookId(const string& bookId) const;//根据图书id获取所有副本
+    [[nodiscard]] vector<BookCopy> getAvailableCopies(const string& bookId) const;//根据图书id获取所有可借阅的副本
+
+    //校验
+    [[nodiscard]] bool isCopyBorrowed(const string& copyId) const;//根据副本id判断图书是否已借出
 };
 
 
