@@ -7,7 +7,6 @@ user_id        PK
 name
 role           (student / admin)
 password
-max_borrow
 */
 
 UserDAO::UserDAO(DatabaseOperator* userDatabase):userDatabase(userDatabase){}

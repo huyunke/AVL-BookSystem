@@ -11,8 +11,7 @@ id INTEGER PRIMARY KEY,
 title TEXT,
 author TEXT,
 category TEXT,
-total_count INTEGER,
-available_count INTEGER
+publisher TEXT,
 );
 */
 

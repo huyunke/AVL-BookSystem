@@ -13,7 +13,7 @@ bool BookDAO::addBook(const Book &book) {
     if (!bookDatabase->prepare(sql, &stmt)) return false;
 
     sqlite3_bind_text(stmt, 1, book.getId().c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, book.getName().c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, book.getTitle().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 3, book.getAuthor().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 4, book.getCategory().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 5, book.getPublisher().c_str(), -1, SQLITE_TRANSIENT);
@@ -30,7 +30,7 @@ bool BookDAO::updateBook(const Book &book) {
     sqlite3_stmt* stmt = nullptr;
     if (!bookDatabase->prepare(sql, &stmt)) return false;
 
-    sqlite3_bind_text(stmt, 1, book.getName().c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, book.getTitle().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 2, book.getAuthor().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 3, book.getCategory().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 4, book.getPublisher().c_str(), -1, SQLITE_TRANSIENT);
@@ -62,7 +62,7 @@ static string columnText(sqlite3_stmt* stmt, int col) {
 static Book extractBook(sqlite3_stmt* stmt) {
     Book book;
     book.setBookId(columnText(stmt, 0));
-    book.setBookName(columnText(stmt, 1));
+    book.setBookTitle(columnText(stmt, 1));
     book.setAuthor(columnText(stmt, 2));
     book.setCategory(columnText(stmt, 3));
     book.setPublisher(columnText(stmt, 4));

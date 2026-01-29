@@ -7,6 +7,9 @@ status      TEXT NOT NULL,   -- available / borrowed
 );
 */
 
+BookCopyDAO::BookCopyDAO(DatabaseOperator* bookDatabase):bookCopyDatabase(bookDatabase){}
+BookCopyDAO::~BookCopyDAO()=default;
+
 bool BookCopyDAO::addBookCopy(const BookCopy& bookCopy) {
     const string sql =
         "INSERT INTO book_copy (copy_id, book_id, status) "

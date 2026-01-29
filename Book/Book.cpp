@@ -2,22 +2,20 @@
 #include <iostream>
 using namespace std;
 
-Book::Book(string id, string name, string author,string category, string borrowerId, bool status) {
+Book::Book(string id, string title, string author,string category,string publisher) {
     this->id = id;
-    this->name = name;
+    this->title = title;
     this->author = author;
     this->category = category;
-    this->borrowerId = borrowerId;
-    this->status = status;
+    this->publisher = publisher;
 }
 
 Book::Book() {
     this->id = "";
-    this->name = "";
+    this->title = "";
     this->author = "";
     this->category = "";
-    this->borrowerId = "";
-    this->status = true;
+    this->publisher = "";
 }
 
 Book::~Book() {}
@@ -28,18 +26,8 @@ string Book::getId() const{
 }
 
 //获取图书名称
-string Book::getName() const{
-    return name;
-}
-
-//获取图书状态
-bool Book::getStatus() const{
-    return status;
-}
-
-//获取借阅者id
-string Book::getBorrowerId() const{
-    return borrowerId;
+string Book::getTitle() const{
+    return title;
 }
 
 //获取图书作者
@@ -57,19 +45,9 @@ string Book::getPublisher() const{
     return publisher;
 }
 
-//设置图书状态
-void Book::setBookStatus(bool status) {
-    this->status = status;
-}
-
-//设置借阅者id
-void Book::setBorrowerId(string userId) {
-    this->borrowerId = userId;
-}
-
 //设置图书名称
-void Book::setBookName(string name) {
-    this->name = name;
+void Book::setBookTitle(string name) {
+    this->title = title;
 }
 
 //设置图书作者
@@ -93,20 +71,11 @@ void Book::setBookId(string id) {
 
 //打印图书信息
 void Book::printBookInfo(bool isAdmin) {
-    cout<<"书名: "<<name<<endl;
+    cout<<"书名: "<<title<<endl;
     cout<<"作者: "<<author<<endl;
     cout<<"id: "<<id<<endl;
     cout<<"分类: "<<category<<endl;
     cout<<"出版社: "<<publisher<<endl;
-    if (status) {
-        cout<<"状态: 可借"<<endl;
-    } else {
-        cout<<"状态: 已借出"<<endl;
-        //管理员可以查看借阅者id
-        if (isAdmin) {
-            cout<<"借阅者id: "<<borrowerId<<endl;
-        }
-    }
 }
 
 //重载比较运算符, 用于AVL树排序
