@@ -7,6 +7,7 @@
 CREATE TABLE record (
 user_id       TEXT NOT NULL,
 book_id       TEXT NOT NULL,
+copy_id       TEXT NOT NULL,
 borrow_time   INTEGER NOT NULL,
 return_time   INTEGER NOT NULL
 );
@@ -19,14 +20,16 @@ public:
     explicit RecordDAO(DatabaseOperator* recordDatabase);
     ~RecordDAO();
 
-    bool addBorrowRecord(const string& userId, const string& bookId);
-    bool updateReturnTime(const string& userId, const string& bookId);
+    [[nodiscard]] bool addBorrowRecord(const Record& record) const;//为TxtToDatabaseWriter提供接口
+    [[nodiscard]] bool addBorrowRecord(const string& userId, const string& copyId) const;
+    [[nodiscard]] bool updateReturnTime(const string& userId, const string& copyId) const;
 
-    vector<Record> getActiveRecordsByUser(const string& userId);
-    vector<Record> getRecordsByUser(const string& userId);
-    vector<Record> getRecordsByCopyId(const string& copyId);
-    bool hasActiveRecord(const string& userId, const string& copyId);
+    [[nodiscard]] vector<Record> getActiveRecordsByUser(const string& userId) const;
+    [[nodiscard]] vector<Record> getRecordsByUser(const string& userId) const;
+    [[nodiscard]] vector<Record> getRecordsByCopyId(const string& copyId) const;
+    bool getRecordCountByBookId(const string& bookId,int& count) const;
 
+    [[nodiscard]] bool hasActiveRecord(const string& userId, const string& copyId) const;
 };
 
 
