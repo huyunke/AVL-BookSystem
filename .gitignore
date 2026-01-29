@@ -30,7 +30,3 @@ build/
 *.bak
 *.swp
 *~
-
-# 数据文件（可选，如果不想提交数据）
-# book.txt
-# user.txt

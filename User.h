@@ -2,8 +2,8 @@
 #define AVL_BOOKSYSTEM_USER_H
 #include <string>
 #include <vector>
-#include "BookBorrowInfo.h"
-#include "AVLTree.h"
+#include "../BookBorrowInfo.h"
+#include "../AVLTree.h"
 
 using namespace std;
 

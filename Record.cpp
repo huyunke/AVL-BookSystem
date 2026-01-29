@@ -1,4 +1,4 @@
-#include "Record.h"
+#include "../Record.h"
 
 Record::Record(string userId, string copyId, time_t borrowTime, time_t returnTime) {
     this->userId = userId;
