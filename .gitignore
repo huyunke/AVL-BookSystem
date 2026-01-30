@@ -1,10 +1,9 @@
-# 自定义忽略
-sqlite3.h
-TO.md
-推荐模块.md
-
-# Crypto++库（第三方库）
-cryptopp/
+# 忽略文件
+utils/sqlite3.h
+utils/sqlite3.c
+utils/httplib.h
+utils/json.hpp
+utils/cryptopp/
 
 # 可执行文件
 *.exe
