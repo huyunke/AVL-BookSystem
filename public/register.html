@@ -23,9 +23,9 @@
 
         .register-container {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 40px;
             width: 100%;
             max-width: 400px;
             animation: slideIn 0.5s ease-out;
@@ -44,41 +44,39 @@
 
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .header h1 {
             color: #333;
-            font-size: 24px;
-            margin-bottom: 5px;
+            font-size: 28px;
+            margin-bottom: 8px;
         }
 
         .header p {
             color: #666;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            color: #333;
+            color: #555;
             font-weight: 500;
             margin-bottom: 5px;
-            font-size: 13px;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             font-size: 14px;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
+            transition: border-color 0.3s;
         }
 
         .form-group input:focus,
@@ -90,28 +88,26 @@
         }
 
         .form-group .hint {
-            font-size: 11px;
+            font-size: 12px;
             color: #999;
-            margin-top: 3px;
+            margin-top: 5px;
         }
 
         .btn-register {
             width: 100%;
-            padding: 11px;
+            padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 15px;
+            border-radius: 5px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 5px;
+            transition: transform 0.2s;
         }
 
         .btn-register:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
 
         .btn-register:active {
@@ -119,12 +115,11 @@
         }
 
         .message {
+            margin-top: 15px;
             padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            display: none;
-            font-size: 13px;
+            border-radius: 5px;
             text-align: center;
+            display: none;
         }
 
         .message.success {
@@ -141,8 +136,7 @@
 
         .link {
             text-align: center;
-            margin-top: 15px;
-            font-size: 13px;
+            margin-top: 20px;
         }
 
         .link a {
@@ -155,16 +149,6 @@
         .link a:hover {
             color: #764ba2;
             text-decoration: underline;
-        }
-
-        .role-info {
-            background: #f0f4ff;
-            padding: 8px;
-            border-radius: 6px;
-            margin-top: 4px;
-            font-size: 11px;
-            color: #555;
-            line-height: 1.4;
         }
     </style>
 </head>
@@ -181,8 +165,8 @@
             <div class="form-group">
                 <label for="userId">用户ID *</label>
                 <input type="text" id="userId" name="userId" required
-                       placeholder="请输入用户ID（至少3个字符）" minlength="3">
-                <div class="hint">用于登录的唯一标识，至少3个字符</div>
+                       placeholder="请输入用户ID" minlength="12">
+                <div class="hint">用于登录的唯一标识</div>
             </div>
 
             <div class="form-group">
@@ -206,18 +190,6 @@
                 <div class="hint">请再次输入相同的密码</div>
             </div>
 
-            <div class="form-group">
-                <label for="role">用户角色</label>
-                <select id="role" name="role">
-                    <option value="reader">普通读者</option>
-                    <option value="admin">管理员</option>
-                </select>
-                <div class="role-info">
-                    <strong>普通读者：</strong>可以借阅图书、查看借阅记录<br>
-                    <strong>管理员：</strong>拥有所有权限，可以管理图书和用户
-                </div>
-            </div>
-
             <button type="submit" class="btn-register">立即注册</button>
         </form>
 
@@ -236,7 +208,6 @@
             const name = document.getElementById('name').value.trim();
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            const role = document.getElementById('role').value;
             const messageDiv = document.getElementById('message');
 
             // 前端验证
@@ -261,12 +232,13 @@
             }
 
             try {
+                // 发送明文密码到后端，后端会自动加密
                 const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ userId, name, password, role })
+                    body: JSON.stringify({ userId, name, password })
                 });
 
                 const data = await response.json();
