@@ -1,7 +1,7 @@
 #ifndef AVL_BOOKSYSTEM_RECORDDAO_H
 #define AVL_BOOKSYSTEM_RECORDDAO_H
 #include "../DatabaseOperator.h"
-#include "../../Record.h"
+#include "../../entity/Record.h"
 #include<vector>
 /*
 CREATE TABLE record (

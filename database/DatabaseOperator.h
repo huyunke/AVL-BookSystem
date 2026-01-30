@@ -1,6 +1,6 @@
 #ifndef AVL_BOOKSYSTEM_DATABASEOPERATOR_H
 #define AVL_BOOKSYSTEM_DATABASEOPERATOR_H
-#include "../sqlite3.h"
+#include "../utils/sqlite3.h"
 #include<string>
 #include <vector>
 using namespace std;

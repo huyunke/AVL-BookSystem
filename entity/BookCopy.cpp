@@ -1,4 +1,4 @@
-#include "BookCopy.h"
+#include "../Book/BookCopy.h"
 #include <string>
 
 BookCopy::BookCopy(string bookId, string copyId, string status) {

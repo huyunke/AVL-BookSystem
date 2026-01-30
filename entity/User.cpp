@@ -1,7 +1,6 @@
-#include "done/User.h"
+#include "User.h"
 #include<string>
-#include "../AVLTree.h"
-#include "utils/PasswordUtils.h"
+#include "../utils/PasswordUtils.h"
 using namespace std;
 
 User::User(string id,string name, string password,string type) {
@@ -10,6 +9,13 @@ User::User(string id,string name, string password,string type) {
     password=PasswordUtils::encryptPassword(password);
     this->password = password;
     this->type = type;
+}
+
+User::User() {
+    this->id = "";
+    this->name = "";
+    this->password = "";
+    this->type = "";
 }
 
 User::~User() {}

@@ -1,8 +1,8 @@
 #include "PasswordUtils.h"
-#include "../cryptopp/sha.h"          // Crypto++ SHA-256
-#include "../cryptopp/hex.h"        // Crypto++ Hex编码
-#include "../cryptopp/osrng.h"        // Crypto++ 随机数生成器
-#include "../cryptopp/filters.h"      // Crypto++ 过滤器
+#include "cryptopp/sha.h"          // Crypto++ SHA-256
+#include "cryptopp/hex.h"        // Crypto++ Hex编码
+#include "cryptopp/osrng.h"        // Crypto++ 随机数生成器
+#include "cryptopp/filters.h"      // Crypto++ 过滤器
 
 using namespace CryptoPP;
 

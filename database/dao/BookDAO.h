@@ -1,7 +1,7 @@
 #ifndef AVL_BOOKSYSTEM_BOOKDAO_H
 #define AVL_BOOKSYSTEM_BOOKDAO_H
 #include "D:\CLion\AVL-BookSystem\database\DatabaseOperator.h"
-#include "../../Book/Book.h"
+#include "../../entity/Book.h"
 #include <string>
 #include <vector>
 

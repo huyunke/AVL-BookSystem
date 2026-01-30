@@ -2,8 +2,6 @@
 #define AVL_BOOKSYSTEM_USER_H
 #include <string>
 #include <vector>
-#include "../BookBorrowInfo.h"
-#include "../AVLTree.h"
 
 using namespace std;
 
@@ -17,6 +15,7 @@ class User {
     // vector<BookBorrowInfo> borrowInfo;//借阅图书的相关信息，可以借阅多本，设定归还时间
 public:
     User(string id,string name, string password,string type="reader");
+    User();
     ~User();
     const string getId()const;//获取用户id
     const string getName()const;//获取用户名

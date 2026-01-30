@@ -1,7 +1,7 @@
 #ifndef AVL_BOOKSYSTEM_USERDAO_H
 #define AVL_BOOKSYSTEM_USERDAO_H
 #include "../DatabaseOperator.h"
-#include "../../User.h"
+#include "../../entity/User.h"
 #include <string>
 
 class UserDAO {
