@@ -29,6 +29,7 @@ public:
     void setId(string id);
     void setName(string name);
     void setPassword(string password);//设置用户密码
+    void setType(string type);//设置用户类型
 
     // void setBorrowedBookCount(int borrowedBookCount);
     //

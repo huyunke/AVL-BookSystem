@@ -54,6 +54,11 @@ void Router::registerMiddleware() const {
     
     // 错误处理中间件
     server->set_error_handler([](const httplib::Request& req, httplib::Response& res) {
+        // 如果响应已经有内容了，不要覆盖
+        if (!res.body.empty()) {
+            return;
+        }
+
         nlohmann::json errorJson = {
             {"success", false},
             {"message", "请求处理失败"},

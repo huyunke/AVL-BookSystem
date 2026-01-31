@@ -122,6 +122,7 @@ bool UserDAO::searchUserById(const string& userId, User& user) const {
     if (sqlite3_step(stmt) == SQLITE_ROW) {
         user.setId(columnText(stmt, 0));
         user.setName(columnText(stmt, 1));
+        user.setType(columnText(stmt, 2));
         user.setPassword(columnText(stmt, 3));
         sqlite3_finalize(stmt);
         return true;

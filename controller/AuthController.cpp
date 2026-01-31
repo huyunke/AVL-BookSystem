@@ -63,9 +63,9 @@ void AuthController::handleRegister(const httplib::Request& req, httplib::Respon
     // 普通用户注册时强制设置为 student，不允许用户自己选择角色
     string role = "student";
 
-    // 验证用户ID格式
-    if (userId.length() < 12) {
-        res = createErrorResponse("用户ID长度至少为12个字符", 400);
+    // 验证用户ID格式（必须为12个字符）
+    if (userId.length() != 12) {
+        res = createErrorResponse("用户ID长度必须为12个字符", 400);
         return;
     }
 
@@ -81,11 +81,8 @@ void AuthController::handleRegister(const httplib::Request& req, httplib::Respon
         return;
     }
 
-    // 加密密码
-    string encryptedPassword = PasswordUtils::encryptPassword(password);
-
-    // 创建用户对象
-    User newUser(userId, name, encryptedPassword, role);
+    // 创建用户对象（User构造函数会自动加密密码）
+    User newUser(userId, name, password, role);
 
     // 注册用户
     if (userService->registerUser(newUser)) {
@@ -111,6 +108,7 @@ void AuthController::handleLogin(const httplib::Request& req, httplib::Response&
     // 验证必填字段
     string errorMsg;
     if (!validateRequiredFields(requestData, {"userId", "password"}, errorMsg)) {
+        cout << "登录失败: 缺少必填字段 - " << errorMsg << endl;
         res = createErrorResponse(errorMsg, 400);
         return;
     }
@@ -118,11 +116,24 @@ void AuthController::handleLogin(const httplib::Request& req, httplib::Response&
     string userId = requestData["userId"];
     string password = requestData["password"];
 
+    cout << "尝试登录 - 用户ID: " << userId << endl;
+
+    // 检查用户是否存在
+    if (!userService->isUserExist(userId)) {
+        cout << "登录失败: 用户不存在 - " << userId << endl;
+        res = createErrorResponse("用户不存在", 401);
+        return;
+    }
+
+    cout << "用户存在，开始验证密码..." << endl;
+
     // 验证用户登录
     if (userService->loginUser(userId, password)) {
+        cout << "密码验证成功" << endl;
         // 获取用户信息
         User user;
         if (userService->getUserById(userId, user)) {
+            cout << "获取用户信息成功 - 角色: " << user.getType() << endl;
             json responseData = {
                 {"success", true},
                 {"message", "登录成功"},
@@ -134,9 +145,11 @@ void AuthController::handleLogin(const httplib::Request& req, httplib::Response&
             };
             res = createSuccessResponse(responseData, 200);
         } else {
+            cout << "登录失败: 获取用户信息失败" << endl;
             res = createErrorResponse("获取用户信息失败", 500);
         }
     } else {
+        cout << "登录失败: 密码错误" << endl;
         res = createErrorResponse("用户ID或密码错误", 401);
     }
 }

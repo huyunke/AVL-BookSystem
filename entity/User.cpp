@@ -74,6 +74,11 @@ void User::setPassword(string password) {
     this->password = password;
 }
 
+//设置用户类型
+void User::setType(string type) {
+    this->type = type;
+}
+
 // void User::setBorrowedBookCount(int borrowedBookCount) {
 //     this->borrowedBookCount = borrowedBookCount;
 // }
