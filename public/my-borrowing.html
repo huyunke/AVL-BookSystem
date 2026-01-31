@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的借阅 - 图书管理系统</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif; background: #f5f7fa; min-height: 100vh; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .navbar-brand { font-size: 24px; font-weight: bold; cursor: pointer; }
+        .btn-back { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 8px 20px; border-radius: 5px; cursor: pointer; transition: all 0.3s; text-decoration: none; }
+        .btn-back:hover { background: rgba(255,255,255,0.3); }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab { padding: 12px 30px; background: white; border: none; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 16px; transition: all 0.3s; color: #666; }
+        .tab.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: bold; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .borrow-card { background: white; border-radius: 10px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: grid; grid-template-columns: auto 1fr auto; gap: 20px; align-items: center; }
+        .book-icon { font-size: 48px; }
+        .borrow-info { flex: 1; }
+        .book-title { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 8px; }
+        .borrow-meta { color: #666; font-size: 14px; margin-bottom: 5px; }
+        .borrow-actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+        .status-badge { padding: 6px 15px; border-radius: 15px; font-size: 13px; font-weight: 500; }
+        .status-normal { background: #d4edda; color: #155724; }
+        .status-warning { background: #fff3cd; color: #856404; }
+        .status-danger { background: #f8d7da; color: #721c24; }
+        .status-returned { background: #d1ecf1; color: #0c5460; }
+        .btn-return { padding: 8px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; transition: all 0.3s; }
+        .btn-return:hover { transform: translateY(-2px); box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3); }
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; background: white; border-radius: 10px; }
+        .empty-state-icon { font-size: 64px; margin-bottom: 20px; }
+        .message { padding: 12px; border-radius: 5px; margin-bottom: 20px; display: none; }
+        .message.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .message.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand" onclick="location.href='reader.html'">📚 图书管理系统</div>
+        <a href="reader.html" class="btn-back">返回主页</a>
+    </nav>
+    <div class="container">
+        <div id="message" class="message"></div>
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('current')">当前借阅</button>
+            <button class="tab" onclick="switchTab('history')">借阅历史</button>
+        </div>
+        <div id="currentTab" class="tab-content active"></div>
+        <div id="historyTab" class="tab-content"></div>
+    </div>
+    <script>
+        const API_BASE_URL = 'http://localhost:8080';
+        let currentUser = null;
+        window.onload = function() {
+            currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!currentUser.userId) { window.location.href = 'login.html'; return; }
+            loadCurrentBorrows();
+        };
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            if (tab === 'current') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('currentTab').classList.add('active');
+                loadCurrentBorrows();
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('historyTab').classList.add('active');
+                loadBorrowHistory();
+            }
+        }
+        async function loadCurrentBorrows() {
+            const container = document.getElementById('currentTab');
+            container.innerHTML = '<div class="empty-state">🔄 加载中...</div>';
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/borrow/current?userId=${currentUser.userId}`);
+                const data = await response.json();
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(borrow => {
+                        const status = getStatus(borrow.dueDate);
+                        return `<div class="borrow-card"><div class="book-icon">📕</div><div class="borrow-info"><div class="book-title">${borrow.bookTitle}</div><div class="borrow-meta">借阅时间：${borrow.borrowDate}</div><div class="borrow-meta">应还时间：${borrow.dueDate}</div><div class="borrow-meta">副本ID：${borrow.copyId}</div></div><div class="borrow-actions"><span class="status-badge status-${status.class}">${status.text}</span><button class="btn-return" onclick="returnBook(${borrow.recordId})">归还图书</button></div></div>`;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📚</div><p>暂无借阅记录</p></div>';
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">❌</div><p>加载失败</p></div>';
+            }
+        }
+        async function loadBorrowHistory() {
+            const container = document.getElementById('historyTab');
+            container.innerHTML = '<div class="empty-state">🔄 加载中...</div>';
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/borrow/history?userId=${currentUser.userId}`);
+                const data = await response.json();
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(borrow => `<div class="borrow-card"><div class="book-icon">📗</div><div class="borrow-info"><div class="book-title">${borrow.bookTitle}</div><div class="borrow-meta">借阅时间：${borrow.borrowDate}</div><div class="borrow-meta">归还时间：${borrow.returnDate}</div></div><div class="borrow-actions"><span class="status-badge status-returned">已归还</span></div></div>`).join('');
+                } else {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📚</div><p>暂无历史记录</p></div>';
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">❌</div><p>加载失败</p></div>';
+            }
+        }
+        function getStatus(dueDate) {
+            const due = new Date(dueDate);
+            const now = new Date();
+            const diffDays = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
+            if (diffDays < 0) return { class: 'danger', text: '已超期' };
+            if (diffDays <= 3) return { class: 'warning', text: '即将到期' };
+            return { class: 'normal', text: '正常' };
+        }
+        async function returnBook(recordId) {
+            if (!confirm('确认归还这本图书吗？')) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/borrow/return`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recordId, userId: currentUser.userId })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showMessage('归还成功！', 'success');
+                    loadCurrentBorrows();
+                } else {
+                    showMessage(data.message || '归还失败', 'error');
+                }
+            } catch (error) {
+                showMessage('网络错误，请稍后重试', 'error');
+            }
+        }
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            setTimeout(() => { messageDiv.style.display = 'none'; }, 3000);
+        }
+    </script>
+</body>
+</html>
+

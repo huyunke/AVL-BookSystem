@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书管理 - 图书管理系统</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f7fa; min-height: 100vh; }
+        .navbar { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .navbar-brand { font-size: 24px; font-weight: bold; cursor: pointer; }
+        .btn-back { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 8px 20px; border-radius: 5px; text-decoration: none; }
+        .container { max-width: 1400px; margin: 30px auto; padding: 0 20px; }
+        .toolbar { background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; gap: 15px; }
+        .search-input { flex: 1; padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .btn-primary { padding: 10px 25px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .book-table { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f8f9fa; padding: 12px; text-align: left; color: #333; font-weight: 600; border-bottom: 2px solid #e0e0e0; }
+        td { padding: 12px; border-bottom: 1px solid #f0f0f0; color: #555; }
+        tr:hover { background: #f8f9fa; }
+        .btn-small { padding: 5px 12px; margin: 0 3px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-edit { background: #3498db; color: white; }
+        .btn-delete { background: #e74c3c; color: white; }
+        .btn-copies { background: #2ecc71; color: white; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: white; border-radius: 10px; padding: 30px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; color: #555; margin-bottom: 5px; font-size: 14px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .form-group textarea { min-height: 80px; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-cancel { flex: 1; padding: 10px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-submit { flex: 1; padding: 10px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .message { padding: 12px; border-radius: 5px; margin-bottom: 20px; display: none; }
+        .message.success { background: #d4edda; color: #155724; }
+        .message.error { background: #f8d7da; color: #721c24; }
+        .copy-item { background: #f8f9fa; padding: 10px; margin: 8px 0; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .copy-status { padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+        .status-available { background: #d4edda; color: #155724; }
+        .status-borrowed { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand" onclick="location.href='admin.html'">🛡️ 图书管理系统</div>
+        <a href="admin.html" class="btn-back">返回主页</a>
+    </nav>
+    <div class="container">
+        <div id="message" class="message"></div>
+        <div class="toolbar">
+            <input type="text" id="searchInput" class="search-input" placeholder="搜索图书..." onkeypress="if(event.key==='Enter')searchBooks()">
+            <button class="btn-primary" onclick="searchBooks()">搜索</button>
+            <button class="btn-primary" onclick="showAddBookModal()">+ 添加新书</button>
+        </div>
+        <div class="book-table">
+            <table>
+                <thead><tr><th>ISBN</th><th>书名</th><th>作者</th><th>分类</th><th>出版社</th><th>总数/可借</th><th>操作</th></tr></thead>
+                <tbody id="bookTableBody"><tr><td colspan="7" style="text-align:center;padding:40px;color:#999;">加载中...</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">添加新书</h3>
+            <form id="bookForm">
+                <div class="form-group"><label>ISBN *</label><input type="text" id="isbn" required></div>
+                <div class="form-group"><label>书名 *</label><input type="text" id="title" required></div>
+                <div class="form-group"><label>作者 *</label><input type="text" id="author" required></div>
+                <div class="form-group"><label>分类</label><input type="text" id="category"></div>
+                <div class="form-group"><label>出版社</label><input type="text" id="publisher"></div>
+                <div class="form-group"><label>出版日期</label><input type="date" id="publishDate"></div>
+                <div class="form-group"><label>价格</label><input type="number" id="price" step="0.01"></div>
+                <div class="form-group"><label>页数</label><input type="number" id="pages"></div>
+                <div class="form-group"><label>简介</label><textarea id="description"></textarea></div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeBookModal()">取消</button>
+                    <button type="submit" class="btn-submit">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="copiesModal" class="modal">
+        <div class="modal-content">
+            <h3>副本管理 - <span id="copyBookTitle"></span></h3>
+            <button class="btn-primary" onclick="addCopy()" style="margin-bottom:15px;">+ 添加副本</button>
+            <div id="copyList"></div>
+            <div class="modal-buttons"><button class="btn-cancel" onclick="closeCopiesModal()">关闭</button></div>
+        </div>
+    </div>
+    <script>
+        const API_BASE_URL = 'http://localhost:8080';
+        let currentUser = null;
+        let editingBook = null;
+        let currentISBN = null;
+        window.onload = function() {
+            currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!currentUser.userId || currentUser.role !== 'admin') { alert('需要管理员权限'); window.location.href = 'login.html'; return; }
+            loadBooks();
+        };
+        async function loadBooks() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/books`);
+                const data = await response.json();
+                if (data.success) displayBooks(data.data);
+            } catch (error) { console.error('加载图书失败:', error); }
+        }
+        async function searchBooks() {
+            const keyword = document.getElementById('searchInput').value.trim();
+            if (!keyword) { loadBooks(); return; }
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/books/search?keyword=${encodeURIComponent(keyword)}`);
+                const data = await response.json();
+                if (data.success) displayBooks(data.data);
+            } catch (error) { console.error('搜索失败:', error); }
+        }
+        function displayBooks(books) {
+            const tbody = document.getElementById('bookTableBody');
+            if (books.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:#999;">暂无图书</td></tr>'; return; }
+            tbody.innerHTML = books.map(book => `
+                <tr>
+                    <td>${book.isbn}</td>
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${book.category || '-'}</td>
+                    <td>${book.publisher || '-'}</td>
+                    <td>${book.totalCount}/${book.availableCount}</td>
+                    <td>
+                        <button class="btn-small btn-edit" onclick='editBook(${JSON.stringify(book)})'>编辑</button>
+                        <button class="btn-small btn-copies" onclick="manageCopies('${book.isbn}', '${book.title}')">副本</button>
+                        <button class="btn-small btn-delete" onclick="deleteBook('${book.isbn}')">删除</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        function showAddBookModal() {
+            editingBook = null;
+            document.getElementById('modalTitle').textContent = '添加新书';
+            document.getElementById('bookForm').reset();
+            document.getElementById('isbn').disabled = false;
+            document.getElementById('bookModal').classList.add('show');
+        }
+        function editBook(book) {
+            editingBook = book;
+            document.getElementById('modalTitle').textContent = '编辑图书';
+            document.getElementById('isbn').value = book.isbn;
+            document.getElementById('isbn').disabled = true;
+            document.getElementById('title').value = book.title;
+            document.getElementById('author').value = book.author;
+            document.getElementById('category').value = book.category || '';
+            document.getElementById('publisher').value = book.publisher || '';
+            document.getElementById('publishDate').value = book.publishDate || '';
+            document.getElementById('price').value = book.price || '';
+            document.getElementById('pages').value = book.pages || '';
+            document.getElementById('description').value = book.description || '';
+            document.getElementById('bookModal').classList.add('show');
+        }
+        function closeBookModal() { document.getElementById('bookModal').classList.remove('show'); document.getElementById('bookForm').reset(); }
+        document.getElementById('bookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const bookData = {
+                isbn: document.getElementById('isbn').value,
+                title: document.getElementById('title').value,
+                author: document.getElementById('author').value,
+                category: document.getElementById('category').value,
+                publisher: document.getElementById('publisher').value,
+                publishDate: document.getElementById('publishDate').value,
+                price: document.getElementById('price').value,
+                pages: document.getElementById('pages').value,
+                description: document.getElementById('description').value
+            };
+            try {
+                const url = editingBook ? `${API_BASE_URL}/api/admin/books/update` : `${API_BASE_URL}/api/admin/books/add`;
+                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bookData) });
+                const data = await response.json();
+                if (data.success) { showMessage(editingBook ? '图书更新成功' : '图书添加成功', 'success'); closeBookModal(); loadBooks(); }
+                else { showMessage(data.message || '操作失败', 'error'); }
+            } catch (error) { showMessage('网络错误', 'error'); }
+        });
+        async function deleteBook(isbn) {
+            if (!confirm('确认删除这本图书吗？')) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/books/delete`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ isbn }) });
+                const data = await response.json();
+                if (data.success) { showMessage('删除成功', 'success'); loadBooks(); }
+                else { showMessage(data.message || '删除失败', 'error'); }
+            } catch (error) { showMessage('网络错误', 'error'); }
+        }
+        async function manageCopies(isbn, title) {
+            currentISBN = isbn;
+            document.getElementById('copyBookTitle').textContent = title;
+            document.getElementById('copiesModal').classList.add('show');
+            loadCopies(isbn);
+        }
+        async function loadCopies(isbn) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/copies?isbn=${isbn}`);
+                const data = await response.json();
+                const copyList = document.getElementById('copyList');
+                if (data.success && data.data.length > 0) {
+                    copyList.innerHTML = data.data.map(copy => `
+                        <div class="copy-item">
+                            <div>副本ID: ${copy.copyId} <span class="copy-status status-${copy.status === 'available' ? 'available' : 'borrowed'}">${copy.status === 'available' ? '可借' : '已借出'}</span></div>
+                            <button class="btn-small btn-delete" onclick="deleteCopy(${copy.copyId})">删除</button>
+                        </div>
+                    `).join('');
+                } else { copyList.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">暂无副本</p>'; }
+            } catch (error) { console.error('加载副本失败:', error); }
+        }
+        async function addCopy() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/copies/add`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ isbn: currentISBN }) });
+                const data = await response.json();
+                if (data.success) { showMessage('副本添加成功', 'success'); loadCopies(currentISBN); }
+                else { showMessage(data.message || '添加失败', 'error'); }
+            } catch (error) { showMessage('网络错误', 'error'); }
+        }
+        async function deleteCopy(copyId) {
+            if (!confirm('确认删除这个副本吗？')) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/copies/delete`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ copyId }) });
+                const data = await response.json();
+                if (data.success) { showMessage('副本删除成功', 'success'); loadCopies(currentISBN); }
+                else { showMessage(data.message || '删除失败', 'error'); }
+            } catch (error) { showMessage('网络错误', 'error'); }
+        }
+        function closeCopiesModal() { document.getElementById('copiesModal').classList.remove('show'); }
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        }
+    </script>
+</body>
+</html>
+

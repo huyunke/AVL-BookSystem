@@ -165,8 +165,8 @@
             <div class="form-group">
                 <label for="userId">用户ID *</label>
                 <input type="text" id="userId" name="userId" required
-                       placeholder="请输入用户ID" minlength="12">
-                <div class="hint">用于登录的唯一标识</div>
+                       placeholder="请输入用户ID（必须12个字符）" minlength="12" maxlength="12">
+                <div class="hint">用于登录的唯一标识，必须为12个字符</div>
             </div>
 
             <div class="form-group">
@@ -211,8 +211,8 @@
             const messageDiv = document.getElementById('message');
 
             // 前端验证
-            if (userId.length < 3) {
-                showMessage('用户ID长度至少为3个字符', 'error');
+            if (userId.length !== 12) {
+                showMessage('用户ID长度必须为12个字符', 'error');
                 return;
             }
 

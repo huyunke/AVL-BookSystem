@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书查询 - 图书管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .search-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .search-card h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-select {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+
+        .btn-search {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .results-info {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .book-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .book-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .book-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .book-icon {
+            font-size: 48px;
+        }
+
+        .book-info {
+            flex: 1;
+        }
+
+        .book-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .book-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .book-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-unavailable {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand" onclick="location.href='reader.html'">📚 图书管理系统</div>
+        <a href="reader.html" class="btn-back">返回主页</a>
+    </nav>
+
+    <div class="container">
+        <div class="search-card">
+            <h2>🔍 图书查询</h2>
+            <div class="search-form">
+                <select id="searchType" class="search-select">
+                    <option value="title">书名</option>
+                    <option value="author">作者</option>
+                    <option value="isbn">ISBN</option>
+                    <option value="category">分类</option>
+                </select>
+                <input type="text" id="searchInput" class="search-input"
+                       placeholder="请输入搜索关键词..." onkeypress="handleKeyPress(event)">
+                <button class="btn-search" onclick="searchBooks()">搜索</button>
+            </div>
+            <div id="resultsInfo" class="results-info"></div>
+        </div>
+
+        <div id="bookList" class="book-list">
+            <div class="empty-state">
+                <div class="empty-state-icon">📖</div>
+                <p>请输入关键词搜索图书</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080';
+
+        window.onload = function() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!user.userId) {
+                window.location.href = 'login.html';
+                return;
+            }
+        };
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchBooks();
+            }
+        }
+
+        async function searchBooks() {
+            const searchType = document.getElementById('searchType').value;
+            const searchInput = document.getElementById('searchInput').value.trim();
+
+            if (!searchInput) {
+                alert('请输入搜索关键词');
+                return;
+            }
+
+            const bookList = document.getElementById('bookList');
+            bookList.innerHTML = '<div class="loading">🔄 搜索中...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/books/search?type=${searchType}&keyword=${encodeURIComponent(searchInput)}`);
+                const data = await response.json();
+
+                if (data.success && data.data.length > 0) {
+                    displayBooks(data.data);
+                    document.getElementById('resultsInfo').textContent = `找到 ${data.data.length} 本相关图书`;
+                } else {
+                    bookList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">😔</div>
+                            <p>未找到相关图书</p>
+                        </div>
+                    `;
+                    document.getElementById('resultsInfo').textContent = '';
+                }
+            } catch (error) {
+                console.error('搜索失败:', error);
+                bookList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">❌</div>
+                        <p>搜索失败，请稍后重试</p>
+                    </div>
+                `;
+            }
+        }
+
+        function displayBooks(books) {
+            const bookList = document.getElementById('bookList');
+            bookList.innerHTML = books.map(book => `
+                <div class="book-item" onclick="viewBookDetail('${book.isbn}')">
+                    <div class="book-icon">📕</div>
+                    <div class="book-info">
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-meta">作者：${book.author}</div>
+                        <div class="book-meta">ISBN：${book.isbn}</div>
+                        <div class="book-meta">分类：${book.category || '未分类'}</div>
+                    </div>
+                    <div class="book-status">
+                        <div>
+                            <div style="color: #666; font-size: 12px;">馆藏/可借</div>
+                            <div style="font-size: 18px; font-weight: bold; color: #333;">
+                                ${book.availableCount}/${book.totalCount}
+                            </div>
+                        </div>
+                        <span class="status-badge ${book.availableCount > 0 ? 'status-available' : 'status-unavailable'}">
+                            ${book.availableCount > 0 ? '可借' : '已借出'}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewBookDetail(isbn) {
+            window.location.href = `book-detail.html?isbn=${isbn}`;
+        }
+    </script>
+</body>
+</html>
+

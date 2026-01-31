@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>借还管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f7fa; min-height: 100vh; }
+        .navbar { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .navbar-brand { font-size: 24px; font-weight: bold; cursor: pointer; }
+        .btn-back { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 8px 20px; border-radius: 5px; text-decoration: none; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .action-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .action-card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .action-card h3 { color: #333; margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; color: #555; margin-bottom: 5px; font-size: 14px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .btn-action { width: 100%; padding: 12px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .message { padding: 12px; border-radius: 5px; margin-bottom: 20px; display: none; }
+        .message.success { background: #d4edda; color: #155724; }
+        .message.error { background: #f8d7da; color: #721c24; }
+        .recent-section { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .record-item { background: #f8f9fa; padding: 15px; margin-bottom: 10px; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand" onclick="location.href='admin.html'">🛡️ 图书管理系统</div>
+        <a href="admin.html" class="btn-back">返回主页</a>
+    </nav>
+    <div class="container">
+        <div id="message" class="message"></div>
+        <div class="action-cards">
+            <div class="action-card">
+                <h3>📖 人工借书</h3>
+                <form id="borrowForm">
+                    <div class="form-group"><label>读者ID *</label><input type="text" id="borrowUserId" required></div>
+                    <div class="form-group"><label>图书ISBN *</label><input type="text" id="borrowIsbn" required></div>
+                    <button type="submit" class="btn-action">确认借书</button>
+                </form>
+            </div>
+            <div class="action-card">
+                <h3>📕 人工还书</h3>
+                <form id="returnForm">
+                    <div class="form-group"><label>借阅记录ID *</label><input type="number" id="returnRecordId" required></div>
+                    <div class="form-group"><label>读者ID *</label><input type="text" id="returnUserId" required></div>
+                    <button type="submit" class="btn-action">确认还书</button>
+                </form>
+            </div>
+            <div class="action-card">
+                <h3>⚠️ 异常处理</h3>
+                <form id="exceptionForm">
+                    <div class="form-group"><label>副本ID *</label><input type="number" id="exceptionCopyId" required></div>
+                    <div class="form-group">
+                        <label>异常类型 *</label>
+                        <select id="exceptionType" required>
+                            <option value="">请选择</option>
+                            <option value="lost">图书丢失</option>
+                            <option value="damaged">图书损坏</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>备注</label><input type="text" id="exceptionNote"></div>
+                    <button type="submit" class="btn-action">提交异常</button>
+                </form>
+            </div>
+        </div>
+        <div class="recent-section">
+            <h3>📋 最近操作记录</h3>
+            <div id="recentRecords"></div>
+        </div>
+    </div>
+    <script>
+        const API_BASE_URL = 'http://localhost:8080';
+        let currentUser = null;
+        window.onload = function() {
+            currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!currentUser.userId || currentUser.role !== 'admin') { alert('需要管理员权限'); window.location.href = 'login.html'; return; }
+            loadRecentRecords();
+        };
+        document.getElementById('borrowForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/borrow/manual`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: document.getElementById('borrowUserId').value, isbn: document.getElementById('borrowIsbn').value, adminId: currentUser.userId })
+                });
+                const data = await response.json();
+                if (data.success) { showMessage('借书成功', 'success'); document.getElementById('borrowForm').reset(); loadRecentRecords(); }
+                else { showMessage(data.message || '借书失败', 'error'); }
+            } catch (error) { showMessage('网络错误', 'error'); }
+        });
+        document.getElementById('returnForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/return/manual`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recordId: document.getElementById('returnRecordId').value, userId: document.getElementById('returnUserId').value, adminId: currentUser.userId })
+                });
+                const data = await response.json();
+                if (data.success) { showMessage('还书成功', 'success'); document.getElementById('returnForm').reset(); loadRecentRecords(); }
+                else { showMessage(data.message || '还书失败', 'error'); }
+            } catch (error) { showMessage('网络错误', 'error'); }
+        });
+        document.getElementById('exceptionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/exception/handle`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ copyId: document.getElementById('exceptionCopyId').value, exceptionType: document.getElementById('exceptionType').value, note: document.getElementById('exceptionNote').value, adminId: currentUser.userId })
+                });
+                const data = await response.json();
+                if (data.success) { showMessage('异常处理成功', 'success'); document.getElementById('exceptionForm').reset(); loadRecentRecords(); }
+                else { showMessage(data.message || '处理失败', 'error'); }
+            } catch (error) { showMessage('网络错误', 'error'); }
+        });
+        async function loadRecentRecords() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/records/recent`);
+                const data = await response.json();
+                const container = document.getElementById('recentRecords');
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(r => `<div class="record-item"><strong>${r.action}</strong> - ${r.details}<br><small>${r.timestamp} | 操作员：${r.adminId}</small></div>`).join('');
+                } else {
+                    container.innerHTML = '<p style="text-align:center;color:#999;padding:40px;">暂无操作记录</p>';
+                }
+            } catch (error) { console.error('加载记录失败:', error); }
+        }
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        }
+    </script>
+</body>
+</html>
+
